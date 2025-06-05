@@ -7,17 +7,17 @@ class Camera {
         this.camRight = new Point3D(1, 0, 0); // Right vector
     }
 
-    
+
 
     translateCameraX(dx) {
-        return this.camPos.x + dx;
+        this.camPos.x += dx * this.camSpeed;
     }
 
     translateCameraY(dy){
-        return this.camPos.y + dy;
+        this.camPos.y += dy * this.camSpeed;
     }
 
     translateCameraZ(dz){
-        return this.camPos.z + dz;
+        this.camPos.z += dz * this.camSpeed;
     }
 }
