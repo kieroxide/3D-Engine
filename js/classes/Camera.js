@@ -5,6 +5,7 @@ class Camera {
         this.camDirection = new Point3D(0, 0, -1); // Right handed coordinate system
         this.camUp = new Point3D(0, 1, 0); // Up vector
         this.camRight = new Point3D(1, 0, 0); // Right vector
+        this.focalLength = 500; // Focal length for perspective projection
     }
 
 
