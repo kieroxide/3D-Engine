@@ -30,6 +30,7 @@ class Renderer {
         // Perspective projection formula
         return projectedPoint;
 }
+
     renderLine(ctx, camera, line) {
         let projectedStartPoint = this.renderPoint(camera, line.startPoint);
         let projectedEndPoint = this.renderPoint(camera, line.endPoint);
@@ -39,5 +40,19 @@ class Renderer {
         ctx.strokeStyle = line.colour;
         ctx.stroke();
         ctx.closePath();
+    }
+
+    renderTriangle(ctx, camera, pointA, pointB, pointC, colour = 'black') {
+        let projectedA = this.renderPoint(camera, pointA);
+        let projectedB = this.renderPoint(camera, pointB);
+        let projectedC = this.renderPoint(camera, pointC);
+
+        ctx.beginPath();
+        ctx.moveTo(projectedA.x, projectedA.y);
+        ctx.lineTo(projectedB.x, projectedB.y);
+        ctx.lineTo(projectedC.x, projectedC.y);
+        ctx.closePath();
+        ctx.fillStyle = colour;
+        ctx.fill();
     }
 }
