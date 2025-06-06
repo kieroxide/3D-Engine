@@ -4,6 +4,4 @@ class Line{
         this.endPoint = endPoint;
         this.colour = colour;
     }
-
-
 }

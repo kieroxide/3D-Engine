@@ -22,7 +22,9 @@ class Renderer {
         let projectedPoint = new Point3D(0, 0, 0);
         // Avoid division by zero
         if (point.z === 0) point.z = 0.0001;
-
+        if (point.z > 0) {
+            return null // Point is behind the camera, do not project
+        }
         let nx = point.x / point.z;
         let ny = point.y / point.z;
 
@@ -33,11 +35,16 @@ class Renderer {
 }
 
     renderLine(ctx, camera, line) {
-        let projectedStartPoint = this.renderPoint(camera, line.startPoint);
-        let projectedEndPoint = this.renderPoint(camera, line.endPoint);
+        console.log(camera);
+        let renderedStartPoint = this.renderPoint(camera, line.startPoint);
+        let renderedEndPoint = this.renderPoint(camera, line.endPoint);
+        if (renderedStartPoint == null || renderedEndPoint == null) {
+            return; // Skip rendering if any point is behind the camera
+        }
+        console.log("here");
         ctx.beginPath();
-        ctx.moveTo(projectedStartPoint.x, projectedStartPoint.y);
-        ctx.lineTo(projectedEndPoint.x, projectedEndPoint.y);
+        ctx.moveTo(renderedStartPoint.x, renderedStartPoint.y);
+        ctx.lineTo(renderedEndPoint.x, renderedEndPoint.y);
         ctx.strokeStyle = line.colour;
         ctx.stroke();
         ctx.closePath();

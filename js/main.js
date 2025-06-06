@@ -3,26 +3,35 @@ function main() {
     
     let renderer = new Renderer();
     let scene = new Scene();
+    let controls = new Controls();
 
-    let p1 = new Point3D(0, 0, -50);
-    let p2 = new Point3D(50, 100, -50);
-    let line1 = new Line(p1, p2, 'red');
+    let axis = [];
+    let p1 = new Point3D(0, 0, 0);
+    let p2 = new Point3D(100, 100, 100);
 
-    let camera = new Camera(0, 0, 0);
+    axis.push(new Line(new Point3D(0, 0, -40), new Point3D(200, 0, -1), 'red'));
+    axis.push(new Line(new Point3D(0, 0, -40), new Point3D(0, 200, -1), 'green'));
+    axis.push(new Line(new Point3D(0, 0, -40), new Point3D(0, 0, -200), 'blue'));
+
+    let camera = new Camera(0, 0, 200);
 
     scene.add2DShape([p1, p2, new Point3D(50, 50, -50)], []);
     scene.add2DShape([p1, p2, new Point3D(100, 0, -50), new Point3D(0, 100, -50)],0);
 
     function draw(){
+        controls.CheckControls(camera)
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         //camera.translateCameraX(1);
         //camera.translateCameraY(1);
         //camera.translateCameraZ(1);
-        camera.rotateYaw(0.01);
+        //camera.rotateYaw(0.01);
 
-        renderer.renderLine(ctx, camera, line1);
-        scene.draw(ctx, camera, renderer); 
+        //renderer.renderLine(ctx, camera, line1);
+        //scene.draw(ctx, camera, renderer); 
 
+        for (let l of axis) {
+            renderer.renderLine(ctx, camera, l);
+        }
         requestAnimationFrame(draw)
     }
     draw();

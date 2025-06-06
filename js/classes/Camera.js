@@ -36,15 +36,15 @@ class Camera {
         this.camUp = Math3D.crossProduct(this.camRight, this.camDirection);
     }
 
-    translateCameraX(dx) {
+    translateX(dx) {
         this.camPos.x += dx * this.camSpeed;
     }
 
-    translateCameraY(dy){
+    translateY(dy){
         this.camPos.y += dy * this.camSpeed;
     }
 
-    translateCameraZ(dz){
+    translateZ(dz){
         this.camPos.z += dz * this.camSpeed;
     }
 }
