@@ -11,7 +11,7 @@ class Renderer {
 
         // Rotate the point based on the camera's yaw and pitch
         renderPoint = Math3D.rotateYaw(renderPoint, camera.yaw);
-        
+        renderPoint = Math3D.rotatePitch(renderPoint, camera.pitch);
         // Project the 3D point onto the 2D canvas
         let projectedPoint = this.projectPoint(renderPoint, camera.focalLength);
         

@@ -40,5 +40,11 @@ class Controls {
         if (this.isKeyPressed('ArrowRight')) {
             camera.rotateYaw(0.01);
         }
+        if (this.isKeyPressed('ArrowUp')) {
+            camera.rotatePitch(-0.01);
+        }
+        if (this.isKeyPressed('ArrowDown')) {
+            camera.rotatePitch(0.01);
+        }
     }
 }

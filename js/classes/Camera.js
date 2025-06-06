@@ -11,11 +11,9 @@ class Camera {
         this.focalLength = 500; // Focal length for perspective projection
     }
 
-    rotateYaw(angle) {
-        this.yaw += angle;
+    updateCameraVectors() {
         let cosYaw = Math.cos(this.yaw);
         let sinYaw = Math.sin(this.yaw);
-
         let cosPitch = Math.cos(this.pitch);
         let sinPitch = Math.sin(this.pitch);
 
@@ -26,7 +24,7 @@ class Camera {
 
         // Right Vector
         let crossProduct = Math3D.crossProduct(this.camDirection, this.worldUp);
-        let normalizedCross = Math3D.normalize(crossProduct); 
+        let normalizedCross = Math3D.normalize(crossProduct);
 
         this.camRight.x = normalizedCross.x;
         this.camRight.y = normalizedCross.y;
@@ -36,15 +34,34 @@ class Camera {
         this.camUp = Math3D.crossProduct(this.camRight, this.camDirection);
     }
 
+    rotateYaw(angle) {
+        this.yaw += angle;
+        this.updateCameraVectors();
+    }
+
+    rotatePitch(angle) {
+        this.pitch += angle;
+        this.updateCameraVectors();
+    }
+
     translateX(dx) {
-        this.camPos.x += dx * this.camSpeed;
+        // Move right/left
+        this.camPos.x += this.camRight.x * dx * this.camSpeed;
+        this.camPos.y += this.camRight.y * dx * this.camSpeed;
+        this.camPos.z += this.camRight.z * dx * this.camSpeed;
     }
 
-    translateY(dy){
-        this.camPos.y += dy * this.camSpeed;
+    translateY(dy) {
+        // Move up/down
+        this.camPos.x += this.camUp.x * dy * this.camSpeed;
+        this.camPos.y += this.camUp.y * dy * this.camSpeed;
+        this.camPos.z += this.camUp.z * dy * this.camSpeed;
     }
 
-    translateZ(dz){
-        this.camPos.z += dz * this.camSpeed;
+    translateZ(dz) {
+        // Move forward/backward
+        this.camPos.x += this.camDirection.x * dz * this.camSpeed;
+        this.camPos.y += this.camDirection.y * dz * this.camSpeed;
+        this.camPos.z += this.camDirection.z * dz * this.camSpeed;
     }
 }

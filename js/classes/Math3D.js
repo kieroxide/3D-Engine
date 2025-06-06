@@ -28,4 +28,13 @@ class Math3D {
             vector.x * sinAngle + vector.z * cosAngle
         );
     }
+    static rotatePitch(vector, angle) {
+        let cosAngle = Math.cos(angle);
+        let sinAngle = Math.sin(angle);
+        return new Point3D(
+            vector.x,
+            vector.y * cosAngle - vector.z * sinAngle,
+            vector.y * sinAngle + vector.z * cosAngle
+        );
+    }
 }
