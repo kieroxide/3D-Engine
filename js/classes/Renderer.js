@@ -55,4 +55,11 @@ class Renderer {
         ctx.fillStyle = colour;
         ctx.fill();
     }
+
+    renderShape2D(ctx, camera, shape) {
+        let triangles = shape.rasterize();
+        for (let triangle of triangles) {
+            triangle.render(ctx, camera, this);
+        }
+    }
 }

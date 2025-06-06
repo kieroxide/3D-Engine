@@ -3,7 +3,9 @@ class Shape2D {
         this.vertices = vertices;
         this.edges = edges;
     }
-
+    render(ctx, camera, renderer) {
+        renderer.renderShape2D(ctx, camera, this);
+    }
     rasterize() {
         let triangles = [];
         for(let i = 1; i < this.vertices.length - 1; i++) {
@@ -13,5 +15,6 @@ class Shape2D {
                 this.vertices[i + 1],
             ));
         }
+        return triangles;
     }
 }

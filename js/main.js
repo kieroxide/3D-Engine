@@ -9,7 +9,7 @@ function main() {
     let camera = new Camera(0, 0, 0);
 
     let triangle = new Triangle(p1, p2, new Point3D(50, 50, -50), 'blue');
-    
+    let shape = new Shape2D([p1, p2, new Point3D(100, 0, -50), new Point3D(0, 100, -50)]);
     function draw(){
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         //camera.translateCameraX(1);
@@ -17,6 +17,7 @@ function main() {
         camera.translateCameraZ(1);
         triangle.render(ctx, camera, renderer);
         renderer.renderLine(ctx, camera, line1);
+        shape.render(ctx, camera, renderer);    
         requestAnimationFrame(draw)
     }
     draw();
