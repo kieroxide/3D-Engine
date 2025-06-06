@@ -1,0 +1,17 @@
+class Shape2D {
+    constructor(vertices = [], edges = []) {
+        this.vertices = vertices;
+        this.edges = edges;
+    }
+
+    rasterize() {
+        let triangles = [];
+        for(let i = 1; i < this.vertices.length - 1; i++) {
+            triangles.push(new Triangle(
+                this.vertices[0],
+                this.vertices[i],
+                this.vertices[i + 1],
+            ));
+        }
+    }
+}
