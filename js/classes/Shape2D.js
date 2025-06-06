@@ -1,7 +1,8 @@
 class Shape2D {
-    constructor(vertices = [], edges = []) {
+    constructor(vertices = [], edges = [], colour = 'black') {
         this.vertices = vertices;
         this.edges = edges;
+        this.colour = colour;
     }
     render(ctx, camera, renderer) {
         renderer.renderShape2D(ctx, camera, this);

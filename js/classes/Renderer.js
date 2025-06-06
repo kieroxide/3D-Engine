@@ -1,7 +1,5 @@
 class Renderer {
-    constructor(){
-        
-    }
+    constructor(){ }
 
     renderPoint(camera, point) {
         let renderPoint = new Point3D(0, 0, 0);
@@ -11,6 +9,9 @@ class Renderer {
         renderPoint.y = point.y - camera.camPos.y;
         renderPoint.z = point.z - camera.camPos.z;
 
+        // Rotate the point based on the camera's yaw and pitch
+        renderPoint = Math3D.rotateYaw(renderPoint, camera.yaw);
+        
         // Project the 3D point onto the 2D canvas
         let projectedPoint = this.projectPoint(renderPoint, camera.focalLength);
         
@@ -46,7 +47,9 @@ class Renderer {
         let projectedA = this.renderPoint(camera, pointA);
         let projectedB = this.renderPoint(camera, pointB);
         let projectedC = this.renderPoint(camera, pointC);
-
+        if (projectedA.z < 0 || projectedB.z < 0 || projectedC.z < 0) {
+            return; // Skip rendering if any point is behind the camera
+        }
         ctx.beginPath();
         ctx.moveTo(projectedA.x, projectedA.y);
         ctx.lineTo(projectedB.x, projectedB.y);

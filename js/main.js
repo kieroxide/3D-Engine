@@ -2,22 +2,27 @@ function main() {
     let {canvas, ctx} = loadCanvas();
     
     let renderer = new Renderer();
+    let scene = new Scene();
 
     let p1 = new Point3D(0, 0, -50);
     let p2 = new Point3D(50, 100, -50);
     let line1 = new Line(p1, p2, 'red');
+
     let camera = new Camera(0, 0, 0);
 
-    let triangle = new Triangle(p1, p2, new Point3D(50, 50, -50), 'blue');
-    let shape = new Shape2D([p1, p2, new Point3D(100, 0, -50), new Point3D(0, 100, -50)]);
+    scene.add2DShape([p1, p2, new Point3D(50, 50, -50)], []);
+    scene.add2DShape([p1, p2, new Point3D(100, 0, -50), new Point3D(0, 100, -50)],0);
+
     function draw(){
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         //camera.translateCameraX(1);
         //camera.translateCameraY(1);
-        camera.translateCameraZ(1);
-        triangle.render(ctx, camera, renderer);
+        //camera.translateCameraZ(1);
+        camera.rotateYaw(0.01);
+
         renderer.renderLine(ctx, camera, line1);
-        shape.render(ctx, camera, renderer);    
+        scene.draw(ctx, camera, renderer); 
+
         requestAnimationFrame(draw)
     }
     draw();
