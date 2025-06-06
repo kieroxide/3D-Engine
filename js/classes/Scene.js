@@ -9,6 +9,12 @@ class Scene {
         this.shapes.push(shape);
         return shape;
     }
+    
+    add3DShape(faces, edges, vertices) {
+        const shape = new Shape3D(faces, edges, vertices);
+        this.shapes.push(shape);
+        return shape;
+    }
 
     draw(ctx, camera, renderer) {
         ctx.clearRect(-ctx.canvas.width / 2, -ctx.canvas.height / 2, ctx.canvas.width, ctx.canvas.height);

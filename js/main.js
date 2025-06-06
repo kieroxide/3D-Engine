@@ -18,6 +18,9 @@ function main() {
     scene.add2DShape([p1, p2, new Point3D(50, 50, -50)], []);
     scene.add2DShape([p1, p2, new Point3D(100, 0, -50), new Point3D(0, 100, -50)],0);
 
+    let cube = new Shape3D().createCube(new Point3D(0, 0, -50), 100, 'red');
+    scene.shapes.push(cube);
+
     function draw(){
         controls.CheckControls(camera)
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
@@ -27,8 +30,8 @@ function main() {
         //camera.rotateYaw(0.01);
 
         //renderer.renderLine(ctx, camera, line1);
-        //scene.draw(ctx, camera, renderer); 
-
+        scene.draw(ctx, camera, renderer); 
+        
         for (let l of axis) {
             renderer.renderLine(ctx, camera, l);
         }
