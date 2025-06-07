@@ -5,75 +5,82 @@ class Renderer {
     constructor(){ }
 
     /**
-     * Projects a 3D point to 2D canvas coordinates.
+     * Transforms a 3D point from world space to camera/view space.
      */
-    renderPoint(camera, point) {
-        let renderPoint = new Point3D(0, 0, 0);
-
-        // Translate the point relative to the camera position
-        renderPoint.x = point.x - camera.camPos.x;
-        renderPoint.y = point.y - camera.camPos.y;
-        renderPoint.z = point.z - camera.camPos.z;
-
-        // Rotate the point based on the camera's yaw and pitch
-        renderPoint = Math3D.rotateYaw(renderPoint, camera.yaw);
-        renderPoint = Math3D.rotatePitch(renderPoint, camera.pitch);
-
-        // Project the 3D point onto the 2D canvas
-        let projectedPoint = this.projectPoint(renderPoint, camera.focalLength);
-        return projectedPoint;
+    toCameraSpace(camera, point) {
+        let viewPoint = new Point3D(
+            point.x - camera.camPos.x,
+            point.y - camera.camPos.y,
+            point.z - camera.camPos.z
+        );
+        viewPoint = Math3D.rotateYaw(viewPoint, camera.yaw);
+        viewPoint = Math3D.rotatePitch(viewPoint, camera.pitch);
+        return viewPoint;
     }
 
     /**
-     * Perspective projection of a 3D point.
+     * Projects a 3D point in camera space to 2D canvas coordinates.
      */
     projectPoint(point, focalLength = 500) {
-        let projectedPoint = new Point3D(0, 0, 0);
         if (point.z === 0) point.z = 0.0001;
-        if (point.z > 0) {
-            return null; // Point is behind the camera
-        }
+        if (point.z > 0) return null; // Behind camera
         let nx = point.x / point.z;
         let ny = point.y / point.z;
-        projectedPoint.x = nx * focalLength;
-        projectedPoint.y = ny * focalLength;
-        return projectedPoint;
+        return new Point3D(nx * focalLength, ny * focalLength, point.z);
     }
 
     /**
      * Renders a 3D line segment.
      */
     renderLine(ctx, camera, line) {
-        let renderedStartPoint = this.renderPoint(camera, line.startPoint);
-        let renderedEndPoint = this.renderPoint(camera, line.endPoint);
-        if (renderedStartPoint == null || renderedEndPoint == null) {
-            return;
-        }
+        let startCam = this.toCameraSpace(camera, line.startPoint);
+        let endCam = this.toCameraSpace(camera, line.endPoint);
+        let startProj = this.projectPoint(startCam);
+        let endProj = this.projectPoint(endCam);
+        if (!startProj || !endProj) return;
         ctx.beginPath();
-        ctx.moveTo(renderedStartPoint.x, renderedStartPoint.y);
-        ctx.lineTo(renderedEndPoint.x, renderedEndPoint.y);
+        ctx.moveTo(startProj.x, startProj.y);
+        ctx.lineTo(endProj.x, endProj.y);
         ctx.strokeStyle = line.colour;
         ctx.stroke();
         ctx.closePath();
     }
 
     /**
-     * Renders a triangle by projecting its vertices and filling it.
+     * Transforms triangle vertices to camera space.
      */
-    renderTriangle(ctx, camera, pointA, pointB, pointC, colour = 'black') {
-        let projectedA = this.renderPoint(camera, pointA);
-        let projectedB = this.renderPoint(camera, pointB);
-        let projectedC = this.renderPoint(camera, pointC);
+    triangleToCameraSpace(camera,triangle) {
+        return new Triangle(
+            this.toCameraSpace(camera, triangle.pointA),
+            this.toCameraSpace(camera, triangle.pointB),
+            this.toCameraSpace(camera, triangle.pointC),
+            triangle.colour
+        );
+    }
 
-        if (projectedA == null || projectedB == null || projectedC == null) {
-            return null;
-        }
-        if (projectedA.z < 0 || projectedB.z < 0 || projectedC.z < 0) {
-            return null;
-        }
+    /**
+     * Projects triangle vertices from camera space to 2D.
+     */
+    projectTriangle(triangle) {
+        return new Triangle(
+        triangle.pointA.projectPoint(),
+        triangle.pointB.projectPoint(),
+        triangle.pointC.projectPoint()
+        )
+    }
 
-
-        return new Triangle(projectedA, projectedB, projectedC, colour);
+    /**
+     * Draws a triangle on the canvas.
+     */
+    drawTriangle(ctx, projA, projB, projC, colour = 'black') {
+        if (!projA || !projB || !projC) return;
+        ctx.beginPath();
+        ctx.moveTo(projA.x, projA.y);
+        ctx.lineTo(projB.x, projB.y);
+        ctx.lineTo(projC.x, projC.y);
+        ctx.closePath();
+        ctx.fillStyle = colour;
+        ctx.fill();
     }
 
     drawTriangles(ctx, triangles) {

@@ -13,12 +13,10 @@ class Triangle {
         this.pointB = pointB;
         this.pointC = pointC;
         this.colour = colour;
+        this.averageZ = 0;
     }
-
-    /**
-     * Renders the triangle using the provided renderer.
-     */
-    render(ctx, camera, renderer) {
-        return renderer.renderTriangle(ctx, camera, this.pointA, this.pointB, this.pointC, this.colour);
+    
+    AverageZ() {
+        return (this.pointA.z + this.pointB.z + this.pointC.z) / 3;
     }
 }

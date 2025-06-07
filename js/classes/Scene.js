@@ -35,18 +35,31 @@ class Scene {
         for (let line of this.lines) {
             line.render(ctx, camera, renderer);
         }
-        this.trianglesToRender = this.getAllTriangles(); // Reset and get triangles to render
-        this.trianglesToDraw = [];
-        console.log("Triangles to Render:", this.trianglesToRender.length);
+        
+        this.trianglesToCamView = this.getAllTriangles(); // Reset and get triangles to render
+        this.trianglesToProject = [];
 
-        for (let triangle of this.trianglesToRender) {
-            let renderedTriangle = triangle.render(ctx, camera, renderer);
-            if(renderedTriangle !== null && renderedTriangle !== undefined) {
-                this.trianglesToDraw.push(renderedTriangle);
+        
+        for (let triangle of this.trianglesToCamView) {
+            let CamViewTriangle = renderer.triangleToCameraSpace(ctx, camera, triangle);
+            if(CamViewTriangle !== null && CamViewTriangle !== undefined) {
+                this.trianglesToProject.push(CamViewTriangle);
             }
         }
         
-        console.log("Triangles to Draw:", this.trianglesToDraw.length);
+        // Sort triangles by average Z value for depth sorting
+        for (let triangle of this.trianglesToProject) {
+            triangle.averageZ = triangle.AverageZ();
+        }
+
+        this.trianglesToProject.sort((a, b) => a.averageZ - b.averageZ);
+
+        for (let triangle of this.trianglesToProject) {
+            let projectedTriangle = renderer.projectTriangle(triangle);
+            if (projectedTriangle) {
+                this.trianglesToDraw.push(new Triangle(projectedTriangle[0], projectedTriangle[1], projectedTriangle[2], triangle.colour));
+            }
+        }
         renderer.drawTriangles(ctx, this.trianglesToDraw);
     }
 
