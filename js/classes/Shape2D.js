@@ -4,9 +4,11 @@ class Shape2D {
         this.edges = edges;
         this.colour = colour;
     }
+
     render(ctx, camera, renderer) {
         renderer.renderShape2D(ctx, camera, this);
     }
+    
     rasterize(colour = 'black') {
         let triangles = [];
         for(let i = 1; i < this.vertices.length - 1; i++) {

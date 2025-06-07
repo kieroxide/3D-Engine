@@ -54,12 +54,14 @@ class Renderer {
         let projectedA = this.renderPoint(camera, pointA);
         let projectedB = this.renderPoint(camera, pointB);
         let projectedC = this.renderPoint(camera, pointC);
+
         if (projectedA == null || projectedB == null || projectedC == null) {
             return; // Skip rendering if any point is behind the camera
         }
         if (projectedA.z < 0 || projectedB.z < 0 || projectedC.z < 0) {
             return; // Skip rendering if any point is behind the camera
         }
+        
         ctx.beginPath();
         ctx.moveTo(projectedA.x, projectedA.y);
         ctx.lineTo(projectedB.x, projectedB.y);

@@ -1,14 +1,17 @@
 class Shape3D{
-    constructor(faces = [], edges = [], vertices = [],colour) {
+    constructor(faces = [], edges = [], vertices = [], colour = ['red', 'green', 'blue']) {
         this.faces = faces; 
         this.vertices = vertices;  
         this.edges = edges;
+        this.colour = colour;
     }
     rasterize() {
         let triangles = [];
+        let colourInc = 0;
         for (const face of this.faces) {
             if (face.vertices.length < 3) continue;
-            triangles = triangles.concat(face.rasterize());
+            triangles = triangles.concat(face.rasterize(this.colour[colourInc]));
+            colourInc = (colourInc + 1) % this.colour.length; // Cycle through colours
         }
         return triangles;
     }
@@ -40,8 +43,7 @@ class Shape3D{
         ctx.fill();
     }
 
-    createCube(midpoint, size , colour = 'black') {
-        this.colour = colour;
+    createCube(midpoint, size) {
         const halfSize = size / 2;
         const vertices = [
             new Point3D(midpoint.x - halfSize, midpoint.y - halfSize, midpoint.z - halfSize),
