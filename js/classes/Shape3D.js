@@ -1,21 +1,38 @@
-class Shape3D{
+/**
+ * Represents a 3D shape composed of faces, edges, and vertices.
+ */
+class Shape3D {
+    /**
+     * @param {Shape2D[]} faces 
+     * @param {Array[]} edges 
+     * @param {Point3D[]} vertices 
+     * @param {string[]} colour 
+     */
     constructor(faces = [], edges = [], vertices = [], colour = ['red', 'green', 'blue']) {
         this.faces = faces; 
         this.vertices = vertices;  
         this.edges = edges;
         this.colour = colour;
     }
+
+    /**
+     * Converts faces to triangles for rasterization.
+     * @returns {Triangle[]}
+     */
     rasterize() {
         let triangles = [];
         let colourInc = 0;
         for (const face of this.faces) {
             if (face.vertices.length < 3) continue;
             triangles = triangles.concat(face.rasterize(this.colour[colourInc]));
-            colourInc = (colourInc + 1) % this.colour.length; // Cycle through colours
+            colourInc = (colourInc + 1) % this.colour.length;
         }
         return triangles;
     }
 
+    /**
+     * Renders the shape by rasterizing and drawing all triangles.
+     */
     render(ctx, camera, renderer) {
         if (!this.faces || this.faces.length === 0) {
             console.warn("No faces to render in Shape3D");
@@ -25,14 +42,17 @@ class Shape3D{
         for (const triangle of triangles) {
             triangle.render(ctx, camera, renderer);
         }
-   }
+    }
 
+    /**
+     * Projects and draws a single triangle.
+     */
     renderTriangle(ctx, camera, pointA, pointB, pointC, colour = 'black') {
         let projectedA = this.renderPoint(camera, pointA);
         let projectedB = this.renderPoint(camera, pointB);
         let projectedC = this.renderPoint(camera, pointC);
         if (projectedA == null || projectedB == null || projectedC == null) {
-            return; // Skip rendering if any point is behind the camera
+            return;
         }
         ctx.beginPath();
         ctx.moveTo(projectedA.x, projectedA.y);
@@ -43,6 +63,12 @@ class Shape3D{
         ctx.fill();
     }
 
+    /**
+     * Creates a cube centered at midpoint with given size.
+     * @param {Point3D} midpoint 
+     * @param {number} size 
+     * @returns {Shape3D}
+     */
     createCube(midpoint, size) {
         const halfSize = size / 2;
         const vertices = [

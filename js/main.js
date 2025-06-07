@@ -13,7 +13,6 @@ function main() {
 
     // Axis lines for reference
     let axis = [];
-
     let p1 = new Point3D(0, 0, 0);
     let p2 = new Point3D(100, 100, 100);
 

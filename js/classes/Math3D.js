@@ -1,3 +1,6 @@
+/**
+ * Utility class for 3D math operations.
+ */
 class Math3D {
     static dotProduct(a, b) {
         let xDot = a.x * b.x;
@@ -15,7 +18,7 @@ class Math3D {
 
     static normalize(vector) {
         let length = Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
-        if (length === 0) return new Point3D(0, 0, 0); // Avoid division by zero
+        if (length === 0) return new Point3D(0, 0, 0);
         return new Point3D(vector.x / length, vector.y / length, vector.z / length);
     }
 

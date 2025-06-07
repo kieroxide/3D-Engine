@@ -1,6 +1,12 @@
+/**
+ * Handles projection and rendering of 3D primitives to 2D canvas.
+ */
 class Renderer {
     constructor(){ }
 
+    /**
+     * Projects a 3D point to 2D canvas coordinates.
+     */
     renderPoint(camera, point) {
         let renderPoint = new Point3D(0, 0, 0);
 
@@ -12,36 +18,37 @@ class Renderer {
         // Rotate the point based on the camera's yaw and pitch
         renderPoint = Math3D.rotateYaw(renderPoint, camera.yaw);
         renderPoint = Math3D.rotatePitch(renderPoint, camera.pitch);
+
         // Project the 3D point onto the 2D canvas
         let projectedPoint = this.projectPoint(renderPoint, camera.focalLength);
-        
         return projectedPoint;
     }
 
+    /**
+     * Perspective projection of a 3D point.
+     */
     projectPoint(point, focalLength = 500) {
         let projectedPoint = new Point3D(0, 0, 0);
-        // Avoid division by zero
         if (point.z === 0) point.z = 0.0001;
         if (point.z > 0) {
-            return null // Point is behind the camera, do not project
+            return null; // Point is behind the camera
         }
         let nx = point.x / point.z;
         let ny = point.y / point.z;
-
         projectedPoint.x = nx * focalLength;
         projectedPoint.y = ny * focalLength;
-        // Perspective projection formula
         return projectedPoint;
-}
+    }
 
+    /**
+     * Renders a 3D line segment.
+     */
     renderLine(ctx, camera, line) {
-        console.log(camera);
         let renderedStartPoint = this.renderPoint(camera, line.startPoint);
         let renderedEndPoint = this.renderPoint(camera, line.endPoint);
         if (renderedStartPoint == null || renderedEndPoint == null) {
-            return; // Skip rendering if any point is behind the camera
+            return;
         }
-        console.log("here");
         ctx.beginPath();
         ctx.moveTo(renderedStartPoint.x, renderedStartPoint.y);
         ctx.lineTo(renderedEndPoint.x, renderedEndPoint.y);
@@ -50,18 +57,20 @@ class Renderer {
         ctx.closePath();
     }
 
+    /**
+     * Renders a triangle by projecting its vertices and filling it.
+     */
     renderTriangle(ctx, camera, pointA, pointB, pointC, colour = 'black') {
         let projectedA = this.renderPoint(camera, pointA);
         let projectedB = this.renderPoint(camera, pointB);
         let projectedC = this.renderPoint(camera, pointC);
 
         if (projectedA == null || projectedB == null || projectedC == null) {
-            return; // Skip rendering if any point is behind the camera
+            return;
         }
         if (projectedA.z < 0 || projectedB.z < 0 || projectedC.z < 0) {
-            return; // Skip rendering if any point is behind the camera
+            return;
         }
-        
         ctx.beginPath();
         ctx.moveTo(projectedA.x, projectedA.y);
         ctx.lineTo(projectedB.x, projectedB.y);
@@ -71,6 +80,9 @@ class Renderer {
         ctx.fill();
     }
 
+    /**
+     * Renders a 2D shape by rasterizing it into triangles.
+     */
     renderShape2D(ctx, camera, shape) {
         let triangles = shape.rasterize();
         for (let triangle of triangles) {
