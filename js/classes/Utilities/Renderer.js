@@ -17,6 +17,7 @@ class Renderer {
 
         return viewPoint;
     }
+
     // Convert Camera space to 2D canvas coordinates
     static toCanvasCoordinates(point, focalLength = 500) {
         if (point.z === 0) point.z = 0.0001;
@@ -28,9 +29,10 @@ class Renderer {
         let cy = ny * focalLength;
 
         let newPoint = new Point3D(cx, cy, point.z) 
-        console.log(newPoint);
+        //console.log(newPoint);
         return newPoint;
     }
+
     static triangleToCameraSpace(triangle, camera) {
         let Ctriangle = new Triangle();
         //console.log(triangle);
@@ -41,6 +43,7 @@ class Renderer {
 
         return Ctriangle;
     }
+
     static triangleTo2DCanvas(camViewTriangle) {
         let canvasTriangle = new Triangle();
         canvasTriangle.pointA = Renderer.toCanvasCoordinates(camViewTriangle.pointA);
@@ -48,6 +51,22 @@ class Renderer {
         canvasTriangle.pointC = Renderer.toCanvasCoordinates(camViewTriangle.pointC);
         canvasTriangle.colour = camViewTriangle.colour;
         return canvasTriangle;
+    }
+
+    static depthSort(triangles){
+        //different values to sort by
+        for (const triangle of triangles){
+            triangle.averageZ();
+            triangle.computeMinZ();
+            triangle.midpointDistance();
+        }
+        //midpoint distance seems to be best for simple shapes
+        triangles.sort((a, b) => {
+        let diff = b.midDistance - a.midDistance;
+        if (Math.abs(diff) < 0.001) return 0; // treat nearly equal distances as equal
+        return diff;
+        });
+        return triangles;
     }
     static draw(triangle, ctx){
         ctx.beginPath();

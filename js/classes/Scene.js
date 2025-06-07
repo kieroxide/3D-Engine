@@ -44,8 +44,8 @@ class Scene {
             }
         }
         //console.log(CamViewTriangles);
-        //Order by Z depth
 
+        Renderer.depthSort(CamViewTriangles);
 
         let CanvasTriangles = [];
         // gets Canvas space from triangles
@@ -55,6 +55,7 @@ class Scene {
                 CanvasTriangles.push(canvasTriangle);
             }
         }
+
 
         console.log(CanvasTriangles);
         //draws the Canvas Triangles to the canvas
