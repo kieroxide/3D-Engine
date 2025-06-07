@@ -30,37 +30,38 @@ class Scene {
     /**
      * Draws all shapes and lines in the scene.
      */
-    draw(ctx, camera, renderer) {
+    draw(ctx, camera) {
         ctx.clearRect(-ctx.canvas.width / 2, -ctx.canvas.height / 2, ctx.canvas.width, ctx.canvas.height);
-        for (let line of this.lines) {
-            line.render(ctx, camera, renderer);
-        }
         
-        this.trianglesToCamView = this.getAllTriangles(); // Reset and get triangles to render
-        this.trianglesToProject = [];
-
-        
-        for (let triangle of this.trianglesToCamView) {
-            let CamViewTriangle = renderer.triangleToCameraSpace(ctx, camera, triangle);
-            if(CamViewTriangle !== null && CamViewTriangle !== undefined) {
-                this.trianglesToProject.push(CamViewTriangle);
+        let triangles = this.getAllTriangles();
+        let CamViewTriangles = [];
+        //console.log(triangles);
+        //gets Cam Space Triangles
+        for (const triangle of triangles){
+            let cameraSpaceTriangle = Renderer.triangleToCameraSpace(triangle, camera);
+            if(cameraSpaceTriangle){
+                CamViewTriangles.push(cameraSpaceTriangle);
             }
         }
-        
-        // Sort triangles by average Z value for depth sorting
-        for (let triangle of this.trianglesToProject) {
-            triangle.averageZ = triangle.AverageZ();
-        }
+        //console.log(CamViewTriangles);
+        //Order by Z depth
 
-        this.trianglesToProject.sort((a, b) => a.averageZ - b.averageZ);
 
-        for (let triangle of this.trianglesToProject) {
-            let projectedTriangle = renderer.projectTriangle(triangle);
-            if (projectedTriangle) {
-                this.trianglesToDraw.push(new Triangle(projectedTriangle[0], projectedTriangle[1], projectedTriangle[2], triangle.colour));
+        let CanvasTriangles = [];
+        // gets Canvas space from triangles
+        for (const triangle of CamViewTriangles){
+            let canvasTriangle = Renderer.triangleTo2DCanvas(triangle);
+            if(canvasTriangle) {
+                CanvasTriangles.push(canvasTriangle);
             }
         }
-        renderer.drawTriangles(ctx, this.trianglesToDraw);
+
+        console.log(CanvasTriangles);
+        //draws the Canvas Triangles to the canvas
+        for (const triangle of CanvasTriangles){
+            Renderer.draw(triangle, ctx);
+        }
+        
     }
 
     /**
