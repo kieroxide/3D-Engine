@@ -13,12 +13,12 @@ class Shape2D {
         this.colour = colour;
     }
 
-    /**
-     * Renders the shape using the provided renderer.
-     */
-    render(ctx, camera, renderer) {
-        renderer.renderShape2D(ctx, camera, this);
-    }
+    ///**
+    // * Renders the shape using the provided renderer.
+    // */
+    //render(ctx, camera, renderer) {
+    //    renderer.renderShape2D(ctx, camera, this);
+    //}
     
     /**
      * Converts the shape into triangles for rasterization.

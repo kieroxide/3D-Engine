@@ -31,39 +31,6 @@ class Shape3D {
     }
 
     /**
-     * Renders the shape by rasterizing and drawing all triangles.
-     */
-    render(ctx, camera, renderer) {
-        if (!this.faces || this.faces.length === 0) {
-            console.warn("No faces to render in Shape3D");
-            return;
-        }
-        let triangles = this.rasterize();
-        for (const triangle of triangles) {
-            triangle.render(ctx, camera, renderer);
-        }
-    }
-
-    /**
-     * Projects and draws a single triangle.
-     */
-    renderTriangle(ctx, camera, pointA, pointB, pointC, colour = 'black') {
-        let projectedA = this.renderPoint(camera, pointA);
-        let projectedB = this.renderPoint(camera, pointB);
-        let projectedC = this.renderPoint(camera, pointC);
-        if (projectedA == null || projectedB == null || projectedC == null) {
-            return;
-        }
-        ctx.beginPath();
-        ctx.moveTo(projectedA.x, projectedA.y);
-        ctx.lineTo(projectedB.x, projectedB.y);
-        ctx.lineTo(projectedC.x, projectedC.y);
-        ctx.closePath();
-        ctx.fillStyle = colour;
-        ctx.fill();
-    }
-
-    /**
      * Creates a cube centered at midpoint with given size.
      * @param {Point3D} midpoint 
      * @param {number} size 

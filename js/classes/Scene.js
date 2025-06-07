@@ -5,6 +5,8 @@ class Scene {
     constructor(){
         this.shapes = [];
         this.lines = [];
+        this.trianglesToRender = [];
+        this.trianglesToDraw = [];
     }
 
     /**
@@ -33,8 +35,33 @@ class Scene {
         for (let line of this.lines) {
             line.render(ctx, camera, renderer);
         }
-        for (let shape of this.shapes) {
-            shape.render(ctx, camera, renderer);
+        this.trianglesToRender = this.getAllTriangles(); // Reset and get triangles to render
+        this.trianglesToDraw = [];
+        console.log("Triangles to Render:", this.trianglesToRender.length);
+
+        for (let triangle of this.trianglesToRender) {
+            let renderedTriangle = triangle.render(ctx, camera, renderer);
+            if(renderedTriangle !== null && renderedTriangle !== undefined) {
+                this.trianglesToDraw.push(renderedTriangle);
+            }
         }
+        
+        console.log("Triangles to Draw:", this.trianglesToDraw.length);
+        renderer.drawTriangles(ctx, this.trianglesToDraw);
+    }
+
+    /**
+     * Returns a flat array of all triangles rasterized from all shapes in the scene.
+     * @returns {Triangle[]}
+     */
+    getAllTriangles() {
+        let allTriangles = [];
+        for (let shape of this.shapes) {
+                const triangles = shape.rasterize();
+                if (Array.isArray(triangles) && triangles.length > 0) {
+                    allTriangles.push(...triangles);
+                }
+        }
+        return allTriangles;
     }
 }

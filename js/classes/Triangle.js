@@ -19,6 +19,6 @@ class Triangle {
      * Renders the triangle using the provided renderer.
      */
     render(ctx, camera, renderer) {
-        renderer.renderTriangle(ctx, camera, this.pointA, this.pointB, this.pointC, this.colour);
+        return renderer.renderTriangle(ctx, camera, this.pointA, this.pointB, this.pointC, this.colour);
     }
 }

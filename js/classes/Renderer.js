@@ -66,27 +66,25 @@ class Renderer {
         let projectedC = this.renderPoint(camera, pointC);
 
         if (projectedA == null || projectedB == null || projectedC == null) {
-            return;
+            return null;
         }
         if (projectedA.z < 0 || projectedB.z < 0 || projectedC.z < 0) {
-            return;
+            return null;
         }
-        ctx.beginPath();
-        ctx.moveTo(projectedA.x, projectedA.y);
-        ctx.lineTo(projectedB.x, projectedB.y);
-        ctx.lineTo(projectedC.x, projectedC.y);
-        ctx.closePath();
-        ctx.fillStyle = colour;
-        ctx.fill();
+
+
+        return new Triangle(projectedA, projectedB, projectedC, colour);
     }
 
-    /**
-     * Renders a 2D shape by rasterizing it into triangles.
-     */
-    renderShape2D(ctx, camera, shape) {
-        let triangles = shape.rasterize();
+    drawTriangles(ctx, triangles) {
         for (let triangle of triangles) {
-            triangle.render(ctx, camera, this);
+            ctx.beginPath();
+            ctx.moveTo(triangle.pointA.x, triangle.pointA.y);
+            ctx.lineTo(triangle.pointB.x, triangle.pointB.y);
+            ctx.lineTo(triangle.pointC.x, triangle.pointC.y);
+            ctx.closePath();
+            ctx.fillStyle = triangle.colour;
+            ctx.fill();
         }
     }
 }
