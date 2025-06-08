@@ -41,4 +41,16 @@ class Mesh{
         this.faces.sort((a,b) => b.midpointDistance - a.midpointDistance);
         return this;
     }
+
+    getVertices(){
+        let vertices = [];
+        for(const face of faces){
+            for(const triangle of face.triangles){
+                vertices.push(triangle.p1);
+                vertices.push(triangle.p2);
+                vertices.push(triangle.p3);
+            }
+        }
+        return vertices;
+    }
 }
