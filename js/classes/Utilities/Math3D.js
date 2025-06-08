@@ -63,5 +63,6 @@ class Math3D {
             midpoint = Math3D.addPoints(point, midpoint);
         }
         midpoint = Math3D.scalePoint(midpoint, (1/points.length));
+        return midpoint;
     }
 }
