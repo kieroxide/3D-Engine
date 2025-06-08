@@ -35,7 +35,6 @@ class Face{
             midpoint = Math3D.addPoints(midpoint, triangle.get_midpoint());
         }
         this.midpoint = Math3D.scalePoint(midpoint, (1/this.triangles.length));
-        debugger;
     }
 
     getMidpointDistance(){
@@ -45,6 +44,5 @@ class Face{
             this.midpoint.y ** 2 +
             this.midpoint.z ** 2
         )
-        debugger;
     }
 }

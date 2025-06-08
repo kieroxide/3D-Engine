@@ -26,6 +26,13 @@ class Mesh{
         }
     }
 
+    drawTriangleOutline(ctx){
+        for(const face of this.faces){
+            for(const tri of face.triangles){
+                tri.drawOutline(ctx)
+            }
+        }
+    }
     depthOrder(){
         const faces = this.faces;
         for(const face of faces){

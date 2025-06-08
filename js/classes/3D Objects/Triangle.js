@@ -17,7 +17,15 @@ class Triangle{
     draw(ctx){
         Renderer.draw(this, ctx);
     }
-
+    drawOutline(ctx){
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';  // set line color to black
+        ctx.moveTo(this.p1.x, this.p1.y);
+        ctx.lineTo(this.p2.x, this.p2.y);
+        ctx.lineTo(this.p3.x, this.p3.y);
+        ctx.closePath();
+        ctx.stroke();
+    }
     get_midpoint(){
         return new Point3D(
         (this.p1.x + this.p2.x + this.p3.x) / 3,

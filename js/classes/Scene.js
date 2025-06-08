@@ -27,6 +27,7 @@ class Scene {
         //actual drawing
         for( const mesh of projMesh){
             mesh.draw(ctx);
+            mesh.drawTriangleOutline(ctx);
         }
     }
 }

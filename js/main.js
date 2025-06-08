@@ -16,7 +16,12 @@ function main() {
     let cubeMidpoint = new Point3D(0,0,0);
     let cubeColours = ['red', 'green', 'blue', 'orange'];
     let cube = new Mesh(generateCubeVertices(cubeMidpoint, 100, cubeColours));
-    scene.meshs.push(cube);
+
+    let sphereFaces = generateSphereFaces(100,10,10,['red']);
+    let sphere = new Mesh(sphereFaces)
+
+    scene.meshs.push(sphere);
+    //scene.meshs.push(cube);
 
     window.addEventListener('resize', () => {
         resizeCanvas(canvas, ctx);
@@ -28,7 +33,7 @@ function main() {
      */
     function draw() {
         controls.CheckControls(camera);
-        
+
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         scene.draw(ctx, camera);
 
@@ -104,6 +109,49 @@ function generateCubeVertices(midpoint, size, colours = ['red', 'green', 'blue']
         const tri2 = new Triangle(v[a], v[c], v[d], colour);
 
         faces.push(new Face([tri1, tri2], colour));
+    }
+
+    return faces;
+}
+
+// Assuming Point3D, Triangle, Face classes exist as in your cube code
+
+function generateSphereFaces(radius, latSegments, lonSegments, colours = ['red', 'green', 'blue']) {
+    const vertices = [];
+    const faces = [];
+
+    // Generate vertices as Point3D
+    for (let lat = 0; lat <= latSegments; lat++) {
+        let theta = (lat * Math.PI) / latSegments;
+        let sinTheta = Math.sin(theta);
+        let cosTheta = Math.cos(theta);
+
+        for (let lon = 0; lon <= lonSegments; lon++) {
+            let phi = (lon * 2 * Math.PI) / lonSegments;
+            let sinPhi = Math.sin(phi);
+            let cosPhi = Math.cos(phi);
+
+            let x = radius * sinTheta * cosPhi;
+            let y = radius * cosTheta;
+            let z = radius * sinTheta * sinPhi;
+
+            vertices.push(new Point3D(x, y, z));
+        }
+    }
+
+    // Generate faces as pairs of triangles
+    for (let lat = 0; lat < latSegments; lat++) {
+        for (let lon = 0; lon < lonSegments; lon++) {
+            let first = lat * (lonSegments + 1) + lon;
+            let second = first + lonSegments + 1;
+
+            const colour = colours[(lat * lonSegments + lon) % colours.length];
+
+            const tri1 = new Triangle(vertices[first], vertices[second], vertices[first + 1], colour);
+            const tri2 = new Triangle(vertices[second], vertices[second + 1], vertices[first + 1], colour);
+
+            faces.push(new Face([tri1, tri2], colour));
+        }
     }
 
     return faces;
