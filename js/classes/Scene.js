@@ -5,6 +5,8 @@ class Scene {
     constructor(){
         this.shapes = [];
         this.lines = [];
+        this.facesToRender = [];
+        this.facesToDraw = [];
         this.trianglesToRender = [];
         this.trianglesToDraw = [];
     }
@@ -37,10 +39,12 @@ class Scene {
         let CamViewTriangles = [];
         //console.log(triangles);
         //gets Cam Space Triangles
-        for (const triangle of triangles){
-            let cameraSpaceTriangle = Renderer.triangleToCameraSpace(triangle, camera);
-            if(cameraSpaceTriangle){
-                CamViewTriangles.push(cameraSpaceTriangle);
+        for(const face of faces){
+            for (const triangle of faces.triangles){
+                let cameraSpaceTriangle = Renderer.triangleToCameraSpace(triangle, camera);
+                if(cameraSpaceTriangle){
+                    CamViewTriangles.push(cameraSpaceTriangle);
+                }
             }
         }
         //console.log(CamViewTriangles);

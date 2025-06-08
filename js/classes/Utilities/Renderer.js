@@ -53,21 +53,13 @@ class Renderer {
         return canvasTriangle;
     }
 
-    static depthSort(triangles){
-        //different values to sort by
-        for (const triangle of triangles){
-            triangle.averageZ();
-            triangle.computeMinZ();
-            triangle.midpointDistance();
+    static depthSort(faces){
+        for( const face in faces){
+            face.getMidpointDistance();
         }
-        //midpoint distance seems to be best for simple shapes
-        triangles.sort((a, b) => {
-        let diff = b.midDistance - a.midDistance;
-        if (Math.abs(diff) < 0.001) return 0; // treat nearly equal distances as equal
-        return diff;
-        });
-        return triangles;
+        faces.sort((a,b) => a.midpointDistance - b.midpointDistance);
     }
+
     static draw(triangle, ctx){
         ctx.beginPath();
         ctx.moveTo(triangle.pointA.x, triangle.pointA.y);   // First vertex (x1, y1)

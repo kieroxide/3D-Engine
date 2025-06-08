@@ -4,69 +4,56 @@
 class Shape3D {
     /**
      * @param {Shape2D[]} faces 
-     * @param {Array[]} edges 
      * @param {Point3D[]} vertices 
      * @param {string[]} colour 
      */
-    constructor(faces = [], edges = [], vertices = [], colour = ['red', 'green', 'blue']) {
+    constructor(faces = [], vertices = [], colour = ['red', 'green', 'blue']) {
         this.faces = faces; 
         this.vertices = vertices;  
-        this.edges = edges;
         this.colour = colour;
     }
 
-    /**
-     * Converts faces to triangles for rasterization.
-     * @returns {Triangle[]}
-     */
-    rasterize() {
-        let triangles = [];
-        let colourInc = 0;
-        for (const face of this.faces) {
-            if (face.vertices.length < 3) continue;
-            triangles = triangles.concat(face.rasterize(this.colour[colourInc]));
-            colourInc = (colourInc + 1) % this.colour.length;
-        }
-        return triangles;
-    }
+    createCube(midpoint, size, colours){
+        this.colours = colours;
+        function generateVertices(midpoint, size){
+            const h = size / 2;
 
-    /**
-     * Creates a cube centered at midpoint with given size.
-     * @param {Point3D} midpoint 
-     * @param {number} size 
-     * @returns {Shape3D}
-     */
-    createCube(midpoint, size) {
-        const halfSize = size / 2;
-        const vertices = [
-            new Point3D(midpoint.x - halfSize, midpoint.y - halfSize, midpoint.z - halfSize),
-            new Point3D(midpoint.x + halfSize, midpoint.y - halfSize, midpoint.z - halfSize),
-            new Point3D(midpoint.x + halfSize, midpoint.y + halfSize, midpoint.z - halfSize),
-            new Point3D(midpoint.x - halfSize, midpoint.y + halfSize, midpoint.z - halfSize),
-            new Point3D(midpoint.x - halfSize, midpoint.y - halfSize, midpoint.z + halfSize),
-            new Point3D(midpoint.x + halfSize, midpoint.y - halfSize, midpoint.z + halfSize),
-            new Point3D(midpoint.x + halfSize, midpoint.y + halfSize, midpoint.z + halfSize),
-            new Point3D(midpoint.x - halfSize, midpoint.y + halfSize, midpoint.z + halfSize)
+            const v = [
+                new Point3D(midpoint.x - h, midpoint.y - h, midpoint.z - h), // 0
+                new Point3D(midpoint.x + h, midpoint.y - h, midpoint.z - h), // 1
+                new Point3D(midpoint.x + h, midpoint.y + h, midpoint.z - h), // 2
+                new Point3D(midpoint.x - h, midpoint.y + h, midpoint.z - h), // 3
+                new Point3D(midpoint.x - h, midpoint.y - h, midpoint.z + h), // 4
+                new Point3D(midpoint.x + h, midpoint.y - h, midpoint.z + h), // 5
+                new Point3D(midpoint.x + h, midpoint.y + h, midpoint.z + h), // 6
+                new Point3D(midpoint.x - h, midpoint.y + h, midpoint.z + h)  // 7
+            ];
+            return v;
+        }
+
+        const faceDefs = [
+            [0, 1, 2, 3], // back
+            [4, 5, 6, 7], // front
+            [0, 1, 5, 4], // bottom
+            [2, 3, 7, 6], // top
+            [1, 2, 6, 5], // right
+            [0, 3, 7, 4]  // left
         ];
-        
-        const edges = [
-            [0, 1], [1, 2], [2, 3], [3, 0],
-            [4, 5], [5, 6], [6, 7], [7, 4],
-            [0, 4], [1, 5], [2, 6], [3, 7]
-        ];
-        
-        const faces = [
-            new Shape2D([vertices[0], vertices[1], vertices[2], vertices[3]], edges.slice(0, 4)),
-            new Shape2D([vertices[4], vertices[5], vertices[6], vertices[7]], edges.slice(4, 8)),
-            new Shape2D([vertices[0], vertices[1], vertices[5], vertices[4]], edges.slice(8, 12)),
-            new Shape2D([vertices[1], vertices[2], vertices[6], vertices[5]], edges.slice(12)),
-            new Shape2D([vertices[2], vertices[3], vertices[7], vertices[6]], edges.slice(14)),
-            new Shape2D([vertices[3], vertices[0], vertices[4], vertices[7]], edges.slice(16))
-        ];
-        
-        this.faces = faces;
-        this.vertices = vertices;
-        this.edges = edges;
-        return this;
+
+        this.vertices = generateVertices(midpoint, size);
+
+        for (let i = 0; i < faceDefs.length; i++) {
+            const [a, b, c, d] = faceDefs[i];
+            const colour = colours[i % colours.length];
+
+            const t1 = new Triangle(this.vertices[a], this.vertices[b], this.vertices[c], colour);
+            const t2 = new Triangle(this.vertices[a], this.vertices[c], this.vertices[d], colour);
+
+            const face = new Face([t1, t2], colour);
+            this.faces.push(face);
+        }
+        this.vertices = v;
+        return;
     }
+    
 }

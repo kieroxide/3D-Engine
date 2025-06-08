@@ -40,4 +40,20 @@ class Math3D {
             vector.y * sinAngle + vector.z * cosAngle
         );
     }
+
+    static addPoints(point1, point2){
+        let sumPoint = new Point3D(0,0,0);
+        sumPoint.x = point1.x + point2.x;
+        sumPoint.y = point1.y + point2.y;
+        sumPoint.z = point1.z + point2.z;
+        return sumPoint;
+    }
+
+    static scalePoint(point, scale){
+        let scaledPoint = new Point3D(0,0,0);
+        scaledPoint.x = point.x * scale;
+        scaledPoint.y = point.y * scale;
+        scaledPoint.z = point.z * scale;
+        return scaledPoint;
+    }
 }

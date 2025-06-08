@@ -18,16 +18,5 @@ class Shape2D {
      * @param {string} colour 
      * @returns {Triangle[]}
      */
-    rasterize(colour = 'black') {
-        let triangles = [];
-        for(let i = 1; i < this.vertices.length - 1; i++) {
-            triangles.push(new Triangle(
-                this.vertices[0],
-                this.vertices[i],
-                this.vertices[i + 1],
-                colour
-            ));
-        }
-        return triangles;
-    }
+    
 }
