@@ -3,9 +3,12 @@ class Face {
         this.triangles = triangles;
         this.midpoint;
         this.midpointDistance = 0;
+        this.transformedTriangles;
+        this.projectedTriangles;
+
     }
 
-    get_Midpoint(){
+    getMidpoint(){
         let midpoint = new Point3D(0, 0, 0);
         for (const triangle in triangles){
             Math3D.addPoints(triangle.get_Midpoint(), midpoint);
@@ -15,7 +18,7 @@ class Face {
         return midpoint;
     }
 
-    get_midpoint_distance(){
+    getMidpointDistance(){
         this.midpoint = this.get_Midpoint();
         this.midpointDistance = Math.sqrt(this.midpoint.x ** 2 + this.midpoint.y ** 2 + this.midpoint.y ** 2);
         return this.midpointDistance;

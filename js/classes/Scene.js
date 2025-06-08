@@ -35,37 +35,22 @@ class Scene {
     draw(ctx, camera) {
         ctx.clearRect(-ctx.canvas.width / 2, -ctx.canvas.height / 2, ctx.canvas.width, ctx.canvas.height);
         
-        let triangles = this.getAllTriangles();
-        let CamViewTriangles = [];
-        //console.log(triangles);
-        //gets Cam Space Triangles
-        for(const face of faces){
-            for (const triangle of faces.triangles){
-                let cameraSpaceTriangle = Renderer.triangleToCameraSpace(triangle, camera);
-                if(cameraSpaceTriangle){
-                    CamViewTriangles.push(cameraSpaceTriangle);
+        //Transform Faces
+        for( const shape in this.shapes){
+            for (const face in shape.faces){
+                for( const triangle in face.triangle){
+                    face.transformedTriangles.push(Renderer.triangleToCameraSpace(triangle));
                 }
             }
         }
-        //console.log(CamViewTriangles);
 
-        Renderer.depthSort(CamViewTriangles);
-
-        let CanvasTriangles = [];
-        // gets Canvas space from triangles
-        for (const triangle of CamViewTriangles){
-            let canvasTriangle = Renderer.triangleTo2DCanvas(triangle);
-            if(canvasTriangle) {
-                CanvasTriangles.push(canvasTriangle);
+        for(const shape in this.shapes){
+            for(const face in shape.faces){
+                face.getMidpointDistance();
             }
         }
-
-
-        console.log(CanvasTriangles);
-        //draws the Canvas Triangles to the canvas
-        for (const triangle of CanvasTriangles){
-            Renderer.draw(triangle, ctx);
-        }
+        //Depth Sort Faces midpoint
+        //Project Faces
         
     }
 
