@@ -22,13 +22,13 @@ function main() {
         resizeCanvas(canvas, ctx);
     });
 
-    /**
+    /** 
      * Main animation loop. Handles controls, clears the canvas,
      * draws the scene and axes, and schedules the next frame.
      */
     function draw() {
         controls.CheckControls(camera);
-
+        
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         scene.draw(ctx, camera);
 

@@ -56,4 +56,12 @@ class Math3D {
         scaledPoint.z = point.z * scale;
         return scaledPoint;
     }
+
+    static findMidpoint(points){
+        let midpoint = new point3D(0,0,0);
+        for( const point of points){
+            midpoint = Math3D.addPoints(point, midpoint);
+        }
+        midpoint = Math3D.scalePoint(midpoint, (1/points.length));
+    }
 }
