@@ -35,10 +35,10 @@ class Renderer {
 
     static triangleToCameraSpace(triangle, camera) {
         let Ctriangle = new Triangle();
-        //console.log(triangle);
-        Ctriangle.pointA = Renderer.toCameraSpace(triangle.pointA, camera);
-        Ctriangle.pointB = Renderer.toCameraSpace(triangle.pointB, camera);
-        Ctriangle.pointC = Renderer.toCameraSpace(triangle.pointC, camera);
+        console.log(triangle);
+        Ctriangle.p1 = Renderer.toCameraSpace(triangle.p1, camera);
+        Ctriangle.p2 = Renderer.toCameraSpace(triangle.p2, camera);
+        Ctriangle.p3 = Renderer.toCameraSpace(triangle.p3, camera);
         Ctriangle.colour = triangle.colour;
 
         return Ctriangle;
@@ -46,9 +46,9 @@ class Renderer {
 
     static triangleTo2DCanvas(camViewTriangle) {
         let canvasTriangle = new Triangle();
-        canvasTriangle.pointA = Renderer.toCanvasCoordinates(camViewTriangle.pointA);
-        canvasTriangle.pointB = Renderer.toCanvasCoordinates(camViewTriangle.pointB);
-        canvasTriangle.pointC = Renderer.toCanvasCoordinates(camViewTriangle.pointC);
+        canvasTriangle.p1 = Renderer.toCanvasCoordinates(camViewTriangle.p1);
+        canvasTriangle.p2 = Renderer.toCanvasCoordinates(camViewTriangle.p2);
+        canvasTriangle.p3 = Renderer.toCanvasCoordinates(camViewTriangle.p3);
         canvasTriangle.colour = camViewTriangle.colour;
         return canvasTriangle;
     }
@@ -57,14 +57,14 @@ class Renderer {
         for( const face in faces){
             face.getMidpointDistance();
         }
-        faces.sort((a,b) => a.midpointDistance - b.midpointDistance);
+        faces.sort((a,b) => b.midpointDistance - a.midpointDistance);
     }
 
     static draw(triangle, ctx){
         ctx.beginPath();
-        ctx.moveTo(triangle.pointA.x, triangle.pointA.y);   // First vertex (x1, y1)
-        ctx.lineTo(triangle.pointB.x, triangle.pointB.y);  // Second vertex (x2, y2)
-        ctx.lineTo(triangle.pointC.x, triangle.pointC.y);   // Third vertex (x3, y3)
+        ctx.moveTo(triangle.p1.x, triangle.p1.y);   // First vertex (x1, y1)
+        ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
+        ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)
         ctx.closePath();       // Closes the path back to the first vertex
 
         ctx.fillStyle = triangle.colour;  // Optional: fill color

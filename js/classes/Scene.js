@@ -3,69 +3,30 @@
  */
 class Scene {
     constructor(){
-        this.shapes = [];
-        this.lines = [];
-        this.facesToRender = [];
-        this.facesToDraw = [];
-        this.trianglesToRender = [];
-        this.trianglesToDraw = [];
+        this.meshs = [];
     }
 
-    /**
-     * Adds a 2D shape to the scene.
-     */
-    add2DShape(vertices, edges, colour = 'black') {
-        const shape = new Shape2D(vertices, edges);
-        this.shapes.push(shape);
-        return shape;
-    }
-    
-    /**
-     * Adds a 3D shape to the scene.
-     */
-    add3DShape(faces, edges, vertices) {
-        const shape = new Shape3D(faces, edges, vertices);
-        this.shapes.push(shape);
-        return shape;
-    }
-
-    /**
-     * Draws all shapes and lines in the scene.
-     */
-    draw(ctx, camera) {
-        ctx.clearRect(-ctx.canvas.width / 2, -ctx.canvas.height / 2, ctx.canvas.width, ctx.canvas.height);
-        
-        //Transform Faces
-        for( const shape in this.shapes){
-            for (const face in shape.faces){
-                for( const triangle in face.triangle){
-                    face.transformedTriangles.push(Renderer.triangleToCameraSpace(triangle));
-                }
-            }
+    draw(ctx, camera){
+        const meshs = this.meshs;
+        console.log(meshs);
+        // Tranform mesh to cameraSpace
+        let transMeshs = [];
+        for( const mesh of meshs){
+            transMeshs.push(mesh.transform(camera));
         }
-
-        for(const shape in this.shapes){
-            for(const face in shape.faces){
-                face.getMidpointDistance();
-            }
+        debugger;
+        for( const mesh of transMeshs){
+            mesh.depthOrder();
         }
-        //Depth Sort Faces midpoint
-        //Project Faces
-        
-    }
-
-    /**
-     * Returns a flat array of all triangles rasterized from all shapes in the scene.
-     * @returns {Triangle[]}
-     */
-    getAllTriangles() {
-        let allTriangles = [];
-        for (let shape of this.shapes) {
-                const triangles = shape.rasterize();
-                if (Array.isArray(triangles) && triangles.length > 0) {
-                    allTriangles.push(...triangles);
-                }
+        let projMesh = [];
+        // Project mesh
+        for( const mesh of transMeshs){
+            projMesh.push(mesh.project());
         }
-        return allTriangles;
+        debugger;
+        //actual drawing
+        for( const mesh of projMesh){
+            mesh.draw(ctx);
+        }
     }
 }
