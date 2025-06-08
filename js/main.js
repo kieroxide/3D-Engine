@@ -11,15 +11,18 @@ function main() {
     let controls = new Controls();
 
     // Camera setup
-    let camera = new Camera(0, 0, 200);
+    let camera = new Camera(200, 200, 200);
 
     let cubeMidpoint = new Point3D(0,0,0);
     let cubeColours = ['red', 'green', 'blue', 'orange'];
     let cube = new Mesh(generateCubeVertices(cubeMidpoint, 100, cubeColours));
 
-    let sphereFaces = generateSphereFaces(100,10,10,['red']);
+    let sphereFaces = generateSphereFaces(20,10,10,['red']);
     let sphere = new Mesh(sphereFaces)
 
+    let floorMidpoint = new Point3D(0,0,0);
+    let floor = new Mesh(generateFloor(floorMidpoint, 300, ['yellow']));
+    scene.meshs.push(floor);
     scene.meshs.push(sphere);
     //scene.meshs.push(cube);
 
@@ -75,6 +78,24 @@ function resizeCanvas(canvas, ctx) {
     }
 }
 
+function generateFloor(midpoint, size, colour = 'gray') {
+    const h = size / 2;
+
+    // 4 corners of the floor (y is fixed, say at midpoint.y)
+    const v = [
+        new Point3D(midpoint.x - h, midpoint.y, midpoint.z - h), // 0 bottom-left
+        new Point3D(midpoint.x + h, midpoint.y, midpoint.z - h), // 1 bottom-right
+        new Point3D(midpoint.x + h, midpoint.y, midpoint.z + h), // 2 top-right
+        new Point3D(midpoint.x - h, midpoint.y, midpoint.z + h), // 3 top-left
+    ];
+
+    // Two triangles making the floor square face
+    const tri1 = new Triangle(v[0], v[1], v[2], colour);
+    const tri2 = new Triangle(v[0], v[2], v[3], colour);
+
+    // Return as one Face grouping the two triangles
+    return [new Face([tri1, tri2], colour)];
+}
 
 function generateCubeVertices(midpoint, size, colours = ['red', 'green', 'blue']){
     const h = size / 2;
