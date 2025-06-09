@@ -4,22 +4,19 @@
  * @property {Object} keys - Stores the state of pressed keys.
  * @property {number} movementSpeed - Speed of camera movement.
  * @property {number} rotateSpeed - Speed of camera rotation.
- * @property {number} mouseX - Current mouse X position.
- * @property {number} mouseY - Current mouse Y position.
+ * @property {boolean} pointerLocked - Whether pointer lock is active.
  */
 class Controls {
     /**
      * Creates a Controls instance and sets up event listeners.
-     * @constructor
      */
     constructor() {
         this.keys = {};
         this.movementSpeed = 5;
         this.rotateSpeed = 0.02;
-
-        // Mouse position
-        this.mouseX = 0;
-        this.mouseY = 0;
+        this.pointerLocked = false;
+        this.deltaX = 0;
+        this.deltaY = 0;
 
         window.addEventListener('keydown', (e) => {
             this.keys[e.code] = true;
@@ -29,9 +26,17 @@ class Controls {
             this.keys[e.code] = false;
         });
 
-        window.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
+        // Listen for pointer lock changes
+        document.addEventListener('pointerlockchange', () => {
+            this.pointerLocked = document.pointerLockElement !== null;
+        });
+
+        // Listen for mouse movement only when pointer is locked
+        document.addEventListener('mousemove', (e) => {
+            if (this.pointerLocked) {
+                this.deltaX += e.movementX;
+                this.deltaY += e.movementY;
+            }
         });
     }
 
@@ -46,8 +51,9 @@ class Controls {
 
     /**
      * Handles camera movement and rotation based on key and mouse input.
+     * Uses pointer lock for mouse look.
      * @param {Camera} camera - The camera object to control.
-     * @param {HTMLCanvasElement} canvas - The canvas element for mouse centering.
+     * @param {HTMLCanvasElement} canvas - The canvas element for pointer lock.
      * @returns {void}
      */
     CheckControls(camera, canvas) {
@@ -58,19 +64,21 @@ class Controls {
         if (this.isKeyPressed('Space')) camera.translateY(this.movementSpeed);
         if (this.isKeyPressed('ShiftLeft')) camera.translateY(-this.movementSpeed);
 
-        // Mouse look: always point where the mouse is
-        // Center of canvas
-        const rect = canvas.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        // Only rotate camera with mouse if pointer is locked
+        if (this.pointerLocked) {
+            const sensitivity = 0.002;
+            camera.yaw += this.deltaX * sensitivity;
+            camera.pitch += this.deltaY * sensitivity;
+            camera.updateCameraVectors();
+            this.deltaX = 0;
+            this.deltaY = 0;
+        }
 
-        // Calculate yaw and pitch based on mouse position
-        const sensitivity = 0.002;
-        const dx = this.mouseX - centerX;
-        const dy = this.mouseY - centerY;
-
-        camera.yaw = dx * sensitivity;
-        camera.pitch = dy * sensitivity;
-        camera.updateCameraVectors();
+        // Request pointer lock on canvas click
+        canvas.onclick = () => {
+            if (!this.pointerLocked) {
+                canvas.requestPointerLock();
+            }
+        };
     }
 }

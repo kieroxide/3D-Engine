@@ -39,7 +39,7 @@ function main() {
      * draws the scene and axes, and schedules the next frame.
      */
     function draw() {
-        controls.CheckControls(camera);
+        controls.CheckControls(camera, canvas);
         physicsbox.update();
 
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
@@ -66,6 +66,7 @@ function loadCanvas() {
         return;
     }
     resizeCanvas(canvas, ctx); 
+    ctx.foc
     return {canvas, ctx};
 }
 
