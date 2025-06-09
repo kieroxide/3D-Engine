@@ -20,7 +20,7 @@ class Renderer {
 
     // Convert Camera space to 2D canvas coordinates
     static toCanvasCoordinates(point, focalLength = 500) {
-        if (point.z > -0.1) return null;
+        if (point.z > -0.0001) return null;
         let nx = point.x / point.z;
         let ny = point.y / point.z;
 
@@ -28,13 +28,11 @@ class Renderer {
         let cy = ny * focalLength;
 
         let newPoint = new Point3D(cx, cy, point.z) 
-        //console.log(newPoint);
         return newPoint;
     }
 
     static triangleToCameraSpace(triangle, camera) {
         let Ctriangle = new Triangle();
-        console.log(triangle);
         Ctriangle.p1 = Renderer.toCameraSpace(triangle.p1, camera);
         Ctriangle.p2 = Renderer.toCameraSpace(triangle.p2, camera);
         Ctriangle.p3 = Renderer.toCameraSpace(triangle.p3, camera);
@@ -63,10 +61,10 @@ class Renderer {
 
     static draw(triangle, ctx){
         ctx.beginPath();
+        ctx.moveTo(triangle.p1.x, triangle.p1.y);
         ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
         ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)
         ctx.closePath();       // Closes the path back to the first vertex
-
         ctx.fillStyle = triangle.colour;  // Optional: fill color
         ctx.fill();              // Fill the triangle
     }

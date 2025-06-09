@@ -8,7 +8,6 @@ class Scene {
 
     draw(ctx, camera){
         const meshs = this.meshs;
-        console.log(meshs);
         // Tranform mesh to cameraSpace
         let transMeshs = [];
         for( const mesh of meshs){
@@ -29,8 +28,13 @@ class Scene {
         }
         //actual drawing
         for( const mesh of projMeshs){
-            mesh.draw(ctx);
-            //mesh.drawTriangleOutline(ctx);
+            if(mesh.wireframe == true){
+                mesh.drawTriangleOutline(ctx);
+            }
+            if(mesh.fill == true){
+                mesh.draw(ctx);
+            }
         }
     }
+
 }

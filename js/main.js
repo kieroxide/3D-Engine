@@ -11,21 +11,28 @@ function main() {
     let controls = new Controls();
 
     // Camera setup
-    let camera = new Camera(200, 200, 200);
+    let camera = new Camera(0, 0, 200);
 
-    let cubeMidpoint = new Point3D(200, 200, 200);
-    let cubeColours = ['red', 'green', 'blue', 'orange'];
+    let cubeMidpoint = new Point3D(0, 0, 0);
+    let cubeColours = ['red', 'green', 'blue', 'orange', 'purple', 'cyan'];
     let cube = new Mesh(generateCubeVertices(cubeMidpoint, 100, cubeColours));
-
+    console.log(cube);
     let sphereFaces = generateSphereFaces(500, 10, 10, ['red']);
     let sphere = new Mesh(sphereFaces)
 
-    let floorMidpoint = new Point3D(0,0,0);
-    let floor = new Mesh(generateFloor(floorMidpoint, 300, ['yellow']));
-    //scene.meshs.push(floor);
-    //scene.meshs.push(sphere);
-    scene.meshs.push(cube);
+    let worldBoxMidpoint = new Point3D(0, 0, 0);
+    let worldBoxSize = 40; // Large enough to enclose your scene
+    let worldBoxColours = ['rgba(0,0,255,0.03)']; // More transparent
 
+    let worldBox = new Mesh(generateCubeVertices(worldBoxMidpoint, worldBoxSize, worldBoxColours));
+    //scene.meshs.push(sphere);
+
+    cube.fill = true;
+    worldBox.wireframe = true;
+
+    scene.meshs.push(cube);
+    scene.meshs.push(worldBox);
+    
     window.addEventListener('resize', () => {
         resizeCanvas(canvas, ctx);
     });
@@ -36,10 +43,9 @@ function main() {
      */
     function draw() {
         controls.CheckControls(camera);
-
+        console.log(camera);
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         scene.draw(ctx, camera);
-
         requestAnimationFrame(draw);
     }
     draw();
@@ -61,9 +67,7 @@ function loadCanvas() {
         console.error('Failed to get canvas context');
         return;
     }
-    resizeCanvas(canvas); // Initial size
-    // Center the origin
-    ctx.translate(canvas.width / 2, canvas.height / 2);
+    resizeCanvas(canvas, ctx); 
     return {canvas, ctx};
 }
 
@@ -74,27 +78,8 @@ function resizeCanvas(canvas, ctx) {
 
     if (ctx) {
         ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
-        ctx.translate(canvas.width / 2, canvas.height / 2); // Recenter
+        ctx.translate(canvas.width / 2, canvas.height / 2);
     }
-}
-
-function generateFloor(midpoint, size, colour = 'gray') {
-    const h = size / 2;
-
-    // 4 corners of the floor (y is fixed, say at midpoint.y)
-    const v = [
-        new Point3D(midpoint.x - h, midpoint.y, midpoint.z - h), // 0 bottom-left
-        new Point3D(midpoint.x + h, midpoint.y, midpoint.z - h), // 1 bottom-right
-        new Point3D(midpoint.x + h, midpoint.y, midpoint.z + h), // 2 top-right
-        new Point3D(midpoint.x - h, midpoint.y, midpoint.z + h), // 3 top-left
-    ];
-
-    // Two triangles making the floor square face
-    const tri1 = new Triangle(v[0], v[1], v[2], colour);
-    const tri2 = new Triangle(v[0], v[2], v[3], colour);
-
-    // Return as one Face grouping the two triangles
-    return [new Face([tri1, tri2], colour)];
 }
 
 function generateCubeVertices(midpoint, size, colours = ['red', 'green', 'blue']){

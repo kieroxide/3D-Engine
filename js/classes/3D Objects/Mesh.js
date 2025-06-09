@@ -1,13 +1,15 @@
 class Mesh{
-    constructor(faces = []){
+    constructor(faces = [], wireframe = false, fill = false){
         this.faces = faces
+        this.wireframe = wireframe;
+        this.fill = fill;
     }
     transform(camera){
         let transFaces = [];
         for(const face of this.faces){
             transFaces.push(face.transform(camera));
         }
-        return new Mesh(transFaces);
+        return new Mesh(transFaces,this.wireframe, this.fill);
     }
     project(){
         let projFaces = [];
@@ -17,7 +19,7 @@ class Mesh{
                 projFaces.push(projface);
             }
         }
-        return new Mesh(projFaces);  
+        return new Mesh(projFaces,this.wireframe, this.fill);  
     }
 
     draw(ctx){
