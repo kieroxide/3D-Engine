@@ -4,6 +4,8 @@
 class Controls {
     constructor() {
         this.keys = {};
+        this.movementSpeed = 5;
+        this.rotateSpeed = 0.02;
 
         window.addEventListener('keydown', (e) => {
             this.keys[e.code] = true;
@@ -27,15 +29,15 @@ class Controls {
      * Handles camera movement and rotation based on key input.
      */
     CheckControls(camera) {
-        if (this.isKeyPressed('KeyW')) camera.translateZ(-1);
-        if (this.isKeyPressed('KeyS')) camera.translateZ(1);
-        if (this.isKeyPressed('KeyA')) camera.translateX(-1);
-        if (this.isKeyPressed('KeyD')) camera.translateX(1);
-        if (this.isKeyPressed('Space')) camera.translateY(1);
-        if (this.isKeyPressed('ShiftLeft')) camera.translateY(-1);
-        if (this.isKeyPressed('ArrowLeft')) camera.rotateYaw(-0.01);
-        if (this.isKeyPressed('ArrowRight')) camera.rotateYaw(0.01);
-        if (this.isKeyPressed('ArrowUp')) camera.rotatePitch(-0.01);
-        if (this.isKeyPressed('ArrowDown')) camera.rotatePitch(0.01);
+        if (this.isKeyPressed('KeyW')) camera.translateZ(-this.movementSpeed);
+        if (this.isKeyPressed('KeyS')) camera.translateZ(this.movementSpeed);
+        if (this.isKeyPressed('KeyA')) camera.translateX(-this.movementSpeed);
+        if (this.isKeyPressed('KeyD')) camera.translateX(this.movementSpeed);
+        if (this.isKeyPressed('Space')) camera.translateY(this.movementSpeed);
+        if (this.isKeyPressed('ShiftLeft')) camera.translateY(-this.movementSpeed);
+        if (this.isKeyPressed('ArrowLeft')) camera.rotateYaw(-this.rotateSpeed);
+        if (this.isKeyPressed('ArrowRight')) camera.rotateYaw(this.rotateSpeed);
+        if (this.isKeyPressed('ArrowUp')) camera.rotatePitch(-this.rotateSpeed);
+        if (this.isKeyPressed('ArrowDown')) camera.rotatePitch(this.rotateSpeed);
     }
 }

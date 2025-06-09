@@ -36,7 +36,7 @@ class Face{
         }
         this.midpoint = Math3D.scalePoint(midpoint, (1/this.triangles.length));
     }
-
+    
     getMidpointDistance(){
         this.getMidpoint();
         this.midpointDistance = Math.sqrt(

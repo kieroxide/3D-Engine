@@ -11,28 +11,24 @@ function main() {
     let controls = new Controls();
 
     // Camera setup
-    let camera = new Camera(0, 0, 200);
+    let camera = new Camera(0, 0, 0);
 
-    let cubeMidpoint = new Point3D(0, 0, 0);
-    let cubeColours = ['red', 'green', 'blue', 'orange', 'purple', 'cyan'];
-    let cube = new Mesh(generateCubeVertices(cubeMidpoint, 100, cubeColours));
-    console.log(cube);
-    let sphereFaces = generateSphereFaces(500, 10, 10, ['red']);
-    let sphere = new Mesh(sphereFaces)
 
-    let worldBoxMidpoint = new Point3D(0, 0, 0);
-    let worldBoxSize = 40; // Large enough to enclose your scene
-    let worldBoxColours = ['rgba(0,0,255,0.03)']; // More transparent
+    let p1 = new Point3D(0,0, -400);
+    let physicsbox = new PhysicsBox(p1, 200);
 
-    let worldBox = new Mesh(generateCubeVertices(worldBoxMidpoint, worldBoxSize, worldBoxColours));
-    //scene.meshs.push(sphere);
+    let spinningCubes = []
+    spinningCubes.push(new Cube(new Point3D(300, 300, -1000), 100, 0));
+    spinningCubes.push(new Cube(new Point3D(-300, 300, -1000), 100, 0));
 
-    cube.fill = true;
-    worldBox.wireframe = true;
+    for(let i = 0; i < 50; i++) {
+        physicsbox.addCube();
+    }
 
-    scene.meshs.push(cube);
-    scene.meshs.push(worldBox);
-    
+    physicsbox.addToScene(scene);
+    for(const cube of spinningCubes){
+        scene.meshs.push(cube.mesh);
+    }
     window.addEventListener('resize', () => {
         resizeCanvas(canvas, ctx);
     });
@@ -43,7 +39,8 @@ function main() {
      */
     function draw() {
         controls.CheckControls(camera);
-        console.log(camera);
+        physicsbox.update();
+
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         scene.draw(ctx, camera);
         requestAnimationFrame(draw);
@@ -73,8 +70,11 @@ function loadCanvas() {
 
 
 function resizeCanvas(canvas, ctx) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    let size = Math.min(window.innerHeight, window.innerWidth);
+    const margin = 60;
+    size -= margin;
+    canvas.width = size;
+    canvas.height = size;
 
     if (ctx) {
         ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
@@ -82,43 +82,7 @@ function resizeCanvas(canvas, ctx) {
     }
 }
 
-function generateCubeVertices(midpoint, size, colours = ['red', 'green', 'blue']){
-    const h = size / 2;
 
-    const v = [
-        new Point3D(midpoint.x - h, midpoint.y - h, midpoint.z - h), // 0
-        new Point3D(midpoint.x + h, midpoint.y - h, midpoint.z - h), // 1
-        new Point3D(midpoint.x + h, midpoint.y + h, midpoint.z - h), // 2
-        new Point3D(midpoint.x - h, midpoint.y + h, midpoint.z - h), // 3
-        new Point3D(midpoint.x - h, midpoint.y - h, midpoint.z + h), // 4
-        new Point3D(midpoint.x + h, midpoint.y - h, midpoint.z + h), // 5
-        new Point3D(midpoint.x + h, midpoint.y + h, midpoint.z + h), // 6
-        new Point3D(midpoint.x - h, midpoint.y + h, midpoint.z + h)  // 7
-    ];
-
-    const faceIndices = [
-        [0, 1, 2, 3], // back
-        [4, 5, 6, 7], // front
-        [0, 1, 5, 4], // bottom
-        [3, 2, 6, 7], // top
-        [1, 2, 6, 5], // right
-        [0, 3, 7, 4]  // left
-    ];
-
-    const faces = [];
-
-    for (let i = 0; i < faceIndices.length; i++) {
-        const [a, b, c, d] = faceIndices[i];
-        const colour = colours[i % colours.length];
-
-        const tri1 = new Triangle(v[a], v[b], v[c], colour);
-        const tri2 = new Triangle(v[a], v[c], v[d], colour);
-
-        faces.push(new Face([tri1, tri2], colour));
-    }
-
-    return faces;
-}
 
 // Assuming Point3D, Triangle, Face classes exist as in your cube code
 

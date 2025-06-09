@@ -61,12 +61,14 @@ class Renderer {
 
     static draw(triangle, ctx){
         ctx.beginPath();
+        ctx.strokeStyle = triangle.colour; // Set stroke color
         ctx.moveTo(triangle.p1.x, triangle.p1.y);
         ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
         ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)
         ctx.closePath();       // Closes the path back to the first vertex
-        ctx.fillStyle = triangle.colour;  // Optional: fill color
+        ctx.fillStyle = triangle.colour; 
         ctx.fill();              // Fill the triangle
+        ctx.stroke();            // Draw the outline of the triangle
     }
 
     // Utility to remove null or undefined triangles from an array

@@ -18,6 +18,7 @@ class Camera {
         this.camUp = new Point3D(0, 1, 0);
         this.camRight = new Point3D(1, 0, 0);
         this.focalLength = 500;
+        this.updateCameraVectors();
     }
 
     /**
