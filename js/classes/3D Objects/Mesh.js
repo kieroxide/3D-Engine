@@ -13,7 +13,7 @@ class Mesh{
         let projFaces = [];
         for(const face of this.faces){
             let projface = face.project()
-            if (face){
+            if (projface){
                 projFaces.push(projface);
             }
         }

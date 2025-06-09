@@ -13,18 +13,18 @@ function main() {
     // Camera setup
     let camera = new Camera(200, 200, 200);
 
-    let cubeMidpoint = new Point3D(0,0,0);
+    let cubeMidpoint = new Point3D(200, 200, 200);
     let cubeColours = ['red', 'green', 'blue', 'orange'];
     let cube = new Mesh(generateCubeVertices(cubeMidpoint, 100, cubeColours));
 
-    let sphereFaces = generateSphereFaces(20,10,10,['red']);
+    let sphereFaces = generateSphereFaces(500, 10, 10, ['red']);
     let sphere = new Mesh(sphereFaces)
 
     let floorMidpoint = new Point3D(0,0,0);
     let floor = new Mesh(generateFloor(floorMidpoint, 300, ['yellow']));
-    scene.meshs.push(floor);
-    scene.meshs.push(sphere);
-    //scene.meshs.push(cube);
+    //scene.meshs.push(floor);
+    //scene.meshs.push(sphere);
+    scene.meshs.push(cube);
 
     window.addEventListener('resize', () => {
         resizeCanvas(canvas, ctx);

@@ -14,20 +14,23 @@ class Scene {
         for( const mesh of meshs){
             transMeshs.push(mesh.transform(camera));
         }
-        debugger;
+
         for( const mesh of transMeshs){
             mesh.depthOrder();
         }
-        let projMesh = [];
+        let projMeshs = [];
         // Project mesh
         for( const mesh of transMeshs){
-            projMesh.push(mesh.project());
+            let projMesh = mesh.project();
+            for(const face of projMesh.faces){
+                face.triangles = Renderer.cullTriangles(face.triangles);
+            }
+            projMeshs.push(projMesh);
         }
-        debugger;
         //actual drawing
-        for( const mesh of projMesh){
+        for( const mesh of projMeshs){
             mesh.draw(ctx);
-            mesh.drawTriangleOutline(ctx);
+            //mesh.drawTriangleOutline(ctx);
         }
     }
 }

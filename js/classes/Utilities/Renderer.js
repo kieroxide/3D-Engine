@@ -20,8 +20,7 @@ class Renderer {
 
     // Convert Camera space to 2D canvas coordinates
     static toCanvasCoordinates(point, focalLength = 500) {
-        if (point.z === 0) point.z = 0.0001;
-        if (point.z > 0) return null; // Behind camera
+        if (point.z > -0.1) return null;
         let nx = point.x / point.z;
         let ny = point.y / point.z;
 
@@ -50,7 +49,9 @@ class Renderer {
         canvasTriangle.p2 = Renderer.toCanvasCoordinates(camViewTriangle.p2);
         canvasTriangle.p3 = Renderer.toCanvasCoordinates(camViewTriangle.p3);
         canvasTriangle.colour = camViewTriangle.colour;
-        return canvasTriangle;
+        if(camViewTriangle.p1 && camViewTriangle.p2 && camViewTriangle.p3){
+            return canvasTriangle;
+        }
     }
 
     static depthSort(faces){
@@ -62,12 +63,22 @@ class Renderer {
 
     static draw(triangle, ctx){
         ctx.beginPath();
-        ctx.moveTo(triangle.p1.x, triangle.p1.y);   // First vertex (x1, y1)
         ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
         ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)
         ctx.closePath();       // Closes the path back to the first vertex
 
         ctx.fillStyle = triangle.colour;  // Optional: fill color
         ctx.fill();              // Fill the triangle
+    }
+
+    // Utility to remove null or undefined triangles from an array
+    static cullTriangles(triangles) {
+        return triangles.filter(tri =>
+            tri &&
+            tri.p1 && tri.p2 && tri.p3 &&
+            tri.p1.x !== undefined && tri.p1.y !== undefined && tri.p1.z !== undefined &&
+            tri.p2.x !== undefined && tri.p2.y !== undefined && tri.p2.z !== undefined &&
+            tri.p3.x !== undefined && tri.p3.y !== undefined && tri.p3.z !== undefined
+        );
     }
 }
