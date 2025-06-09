@@ -1,11 +1,21 @@
 /**
  * Represents a scene containing shapes and lines.
+ * @class
  */
 class Scene {
+    /**
+     * Creates a Scene instance.
+     */
     constructor(){
         this.meshs = [];
     }
 
+    /**
+     * Draws the scene.
+     * @param {CanvasRenderingContext2D} ctx 
+     * @param {Camera} camera 
+     * @returns {void}
+     */
     draw(ctx, camera){
         const meshs = this.meshs;
         // Tranform mesh to cameraSpace
@@ -46,6 +56,11 @@ class Scene {
         }
     }
 
+    /**
+     * Sorts meshes in the scene by depth.
+     * @param {Array<Mesh>} meshs 
+     * @returns {Array<Mesh>}
+     */
     depthOrder(meshs){
         // Calculate distances for all except the first mesh
         for(const mesh of meshs.slice(1)){
@@ -61,6 +76,12 @@ class Scene {
         return meshs;
     }
 
+    /**
+     * Adds a cube to the scene.
+     * @param {Point3D} midpoint 
+     * @param {number} size 
+     * @returns {void}
+     */
     addCube(midpoint, size){
         const cube = new Cube(midpoint, size);
         this.meshs.push(cube);

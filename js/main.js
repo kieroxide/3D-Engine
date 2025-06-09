@@ -1,6 +1,7 @@
 /**
  * Main entry point for the 3D Space Explorer application.
  * Sets up the canvas, scene, camera, controls, and animation loop.
+ * @returns {void}
  */
 function main() {
     // Initialize canvas and context
@@ -68,7 +69,12 @@ function loadCanvas() {
     return {canvas, ctx};
 }
 
-
+/**
+ * Resizes the canvas and sets up the context transform.
+ * @param {HTMLCanvasElement} canvas 
+ * @param {CanvasRenderingContext2D} ctx 
+ * @returns {void}
+ */
 function resizeCanvas(canvas, ctx) {
     let size = Math.min(window.innerHeight, window.innerWidth);
     const margin = 60;
@@ -86,6 +92,14 @@ function resizeCanvas(canvas, ctx) {
 
 // Assuming Point3D, Triangle, Face classes exist as in your cube code
 
+/**
+ * Generates faces for a sphere mesh.
+ * @param {number} radius 
+ * @param {number} latSegments 
+ * @param {number} lonSegments 
+ * @param {Array<string>} colours 
+ * @returns {Array<Face>}
+ */
 function generateSphereFaces(radius, latSegments, lonSegments, colours = ['red', 'green', 'blue']) {
     const vertices = [];
     const faces = [];

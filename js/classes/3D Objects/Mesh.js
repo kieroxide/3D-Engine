@@ -1,10 +1,26 @@
+/**
+ * Represents a mesh composed of faces.
+ * @class
+ */
 class Mesh{
+    /**
+     * Creates a Mesh instance.
+     * @param {Array<Face>} faces 
+     * @param {boolean} [wireframe=false] 
+     * @param {boolean} [fill=true] 
+     */
     constructor(faces = [], wireframe = false, fill = true){
         this.faces = faces;
         this.wireframe = wireframe;
         this.fill = fill;
         this.midpointDistance = 0;
     }
+
+    /**
+     * Transforms all faces in the mesh to camera space.
+     * @param {Camera} camera 
+     * @returns {Mesh}
+     */
     transform(camera){
         let transFaces = [];
         for(const face of this.faces){
@@ -12,6 +28,11 @@ class Mesh{
         }
         return new Mesh(transFaces,this.wireframe, this.fill);
     }
+
+    /**
+     * Projects all faces in the mesh to 2D canvas coordinates.
+     * @returns {Mesh}
+     */
     project(){
         let projFaces = [];
         for(const face of this.faces){
@@ -23,12 +44,22 @@ class Mesh{
         return new Mesh(projFaces,this.wireframe, this.fill);  
     }
 
+    /**
+     * Draws all faces in the mesh.
+     * @param {CanvasRenderingContext2D} ctx 
+     * @returns {void}
+     */
     draw(ctx){
         for(const face of this.faces){
             face.draw(ctx);
         }
     }
 
+    /**
+     * Draws the outlines of all triangles in the mesh.
+     * @param {CanvasRenderingContext2D} ctx 
+     * @returns {void}
+     */
     drawTriangleOutline(ctx){
         for(const face of this.faces){
             for(const tri of face.triangles){
@@ -36,6 +67,11 @@ class Mesh{
             }
         }
     }
+
+    /**
+     * Sorts faces in the mesh by depth.
+     * @returns {Mesh}
+     */
     depthOrder(){
         const faces = this.faces;
         for(const face of faces){
@@ -45,6 +81,10 @@ class Mesh{
         return this;
     }
     
+    /**
+     * Gets all vertices in the mesh.
+     * @returns {Array<Point3D>}
+     */
     getVertices(){
         let vertices = [];
         for(const face of faces){
@@ -57,6 +97,10 @@ class Mesh{
         return vertices;
     }
 
+    /**
+     * Calculates and sets the midpoint distance for the mesh.
+     * @returns {void}
+     */
     calcMidpointDistance(){
         let midPoint = new Point3D(0, 0, 0);
         for(const face of this.faces){

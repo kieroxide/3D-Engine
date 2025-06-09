@@ -1,8 +1,10 @@
 /**
  * Represents a camera in 3D space with position, orientation, and movement.
+ * @class
  */
 class Camera {
     /**
+     * Creates a Camera instance.
      * @param {number} x 
      * @param {number} y 
      * @param {number} z 
@@ -23,6 +25,7 @@ class Camera {
 
     /**
      * Updates camera direction, right, and up vectors based on yaw and pitch.
+     * @returns {void}
      */
     updateCameraVectors() {
         let cosYaw = Math.cos(this.yaw);
@@ -49,6 +52,8 @@ class Camera {
 
     /**
      * Rotates the camera around the yaw axis.
+     * @param {number} angle 
+     * @returns {void}
      */
     rotateYaw(angle) {
         this.yaw += angle;
@@ -57,6 +62,8 @@ class Camera {
 
     /**
      * Rotates the camera around the pitch axis.
+     * @param {number} angle 
+     * @returns {void}
      */
     rotatePitch(angle) {
         this.pitch += angle;
@@ -65,6 +72,8 @@ class Camera {
 
     /**
      * Moves the camera right/left.
+     * @param {number} dx 
+     * @returns {void}
      */
     translateX(dx) {
         this.camPos.x += this.camRight.x * dx * this.camSpeed;
@@ -74,6 +83,8 @@ class Camera {
 
     /**
      * Moves the camera up/down.
+     * @param {number} dy 
+     * @returns {void}
      */
     translateY(dy) {
         this.camPos.x += this.camUp.x * dy * this.camSpeed;
@@ -83,6 +94,8 @@ class Camera {
 
     /**
      * Moves the camera forward/backward.
+     * @param {number} dz 
+     * @returns {void}
      */
     translateZ(dz) {
         this.camPos.x += this.camDirection.x * dz * this.camSpeed;

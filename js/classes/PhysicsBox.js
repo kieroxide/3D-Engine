@@ -1,4 +1,13 @@
+/**
+ * Represents a physics box containing cubes and handling collisions.
+ * @class
+ */
 class PhysicsBox {
+    /**
+     * Creates a PhysicsBox instance.
+     * @param {Point3D} midpoint 
+     * @param {number} size 
+     */
     constructor(midpoint, size){
         this.midpoint = midpoint;
         this.size = size;
@@ -11,6 +20,10 @@ class PhysicsBox {
         this.gravity = -0.05;
     }
 
+    /**
+     * Updates all cubes in the physics box.
+     * @returns {void}
+     */
     update(){
         for(const cube of this.cubes){
             cube.boundaryCheck(this);
@@ -18,6 +31,11 @@ class PhysicsBox {
         }
         this.collisionCheck();
     }
+
+    /**
+     * Checks for collisions between cubes.
+     * @returns {void}
+     */
     collisionCheck(){
         for(const cube of this.cubes){
             for(const otherCube of this.cubes){
@@ -27,6 +45,11 @@ class PhysicsBox {
             }
         }
     }
+
+    /**
+     * Adds a new cube to the physics box.
+     * @returns {void}
+     */
     addCube(){
         let randomX = Math.random() * this.size - this.size / 2 + this.midpoint.x;
         let randomY = Math.random() * this.size - this.size / 2 + this.midpoint.y;
@@ -36,6 +59,11 @@ class PhysicsBox {
         this.cubes.push(cube);
     }
 
+    /**
+     * Adds the main box and all cubes to the scene.
+     * @param {Scene} scene 
+     * @returns {void}
+     */
     addToScene(scene){
         scene.meshs.push(this.mainBox.mesh);
         for(const cube of this.cubes){

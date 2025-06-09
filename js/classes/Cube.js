@@ -1,4 +1,14 @@
+/**
+ * Represents a cube in 3D space with physics.
+ * @class
+ */
 class Cube{
+    /**
+     * Creates a Cube instance.
+     * @param {Point3D} midpoint 
+     * @param {number} size 
+     * @param {number} gravity 
+     */
     constructor(midpoint, size, gravity){
         this.midpoint = midpoint;
         this.size = size;
@@ -14,7 +24,12 @@ class Cube{
 
         this.mesh = new Mesh(this.generateCubeVertices(this.midpoint, this.size, this.colours));
     }
-    
+
+    /**
+     * Checks and resolves collision with another cube.
+     * @param {Cube} otherCube 
+     * @returns {void}
+     */
     collisionCheck(otherCube) {
         const thisHalf = this.size / 2;
         const otherHalf = otherCube.size / 2;
@@ -56,6 +71,11 @@ class Cube{
         }
     }
 
+    /**
+     * Checks and resolves collision with the physics box boundaries.
+     * @param {PhysicsBox} physicsBox 
+     * @returns {void}
+     */
     boundaryCheck(physicsBox) {
         const boxMid = physicsBox.midpoint;
         const boxHalf = physicsBox.size / 2;
@@ -87,6 +107,13 @@ class Cube{
         }
     }
 
+    /**
+     * Generates the vertices and faces for the cube.
+     * @param {Point3D} midpoint 
+     * @param {number} size 
+     * @param {Array<string>} colours 
+     * @returns {Array<Face>}
+     */
     generateCubeVertices(midpoint, size, colours = ['red', 'green', 'blue']){
         const h = size / 2;
 
@@ -124,6 +151,11 @@ class Cube{
 
         return faces;
     }
+
+    /**
+     * Updates the cube's position and velocity.
+     * @returns {void}
+     */
     update(){
         this.velocity.y += this.gravity;
         // Apply velocity to position
@@ -132,10 +164,20 @@ class Cube{
         this.midpoint.z += this.velocity.z;
         this.regenerateCubeVertices();
     }
+
+    /**
+     * Translates the cube along the Y axis.
+     * @param {number} dy 
+     * @returns {void}
+     */
     translateY(dy){
         this.midpoint.y += dy;
     }
 
+    /**
+     * Regenerates the cube's vertices and faces based on its current position.
+     * @returns {void}
+     */
     regenerateCubeVertices(){
         const midpoint = this.midpoint;
         const colours = this.colours;

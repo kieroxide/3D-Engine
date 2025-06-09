@@ -1,10 +1,16 @@
 /**
  * Handles projection and rendering of 3D primitives to 2D canvas.
+ * @class
  */
 class Renderer {
     constructor(){ }
 
-    // Convert 3D point to Camera space
+    /**
+     * Converts a 3D point to camera space.
+     * @param {Point3D} point - The 3D point.
+     * @param {Camera} camera - The camera object.
+     * @returns {Point3D} The point in camera space.
+     */
     static toCameraSpace(point, camera) {
         let viewPoint = new Point3D(
             point.x - camera.camPos.x,
@@ -18,7 +24,12 @@ class Renderer {
         return viewPoint;
     }
 
-    // Convert Camera space to 2D canvas coordinates
+    /**
+     * Converts a camera space point to 2D canvas coordinates.
+     * @param {Point3D} point - The point in camera space.
+     * @param {number} [focalLength=500] - Focal length for projection.
+     * @returns {Point3D|null} The projected 2D point or null if behind camera.
+     */
     static toCanvasCoordinates(point, focalLength = 500) {
         if (point.z > -0.0001) return null;
         let nx = point.x / point.z;
@@ -31,6 +42,12 @@ class Renderer {
         return newPoint;
     }
 
+    /**
+     * Converts a triangle to camera space.
+     * @param {Triangle} triangle - The triangle to convert.
+     * @param {Camera} camera - The camera object.
+     * @returns {Triangle} The triangle in camera space.
+     */
     static triangleToCameraSpace(triangle, camera) {
         let Ctriangle = new Triangle();
         Ctriangle.p1 = Renderer.toCameraSpace(triangle.p1, camera);
@@ -41,6 +58,11 @@ class Renderer {
         return Ctriangle;
     }
 
+    /**
+     * Converts a camera space triangle to 2D canvas coordinates.
+     * @param {Triangle} camViewTriangle - The triangle in camera space.
+     * @returns {Triangle|undefined} The projected triangle or undefined if invalid.
+     */
     static triangleTo2DCanvas(camViewTriangle) {
         let canvasTriangle = new Triangle();
         canvasTriangle.p1 = Renderer.toCanvasCoordinates(camViewTriangle.p1);
@@ -52,6 +74,11 @@ class Renderer {
         }
     }
 
+    /**
+     * Sorts faces by depth.
+     * @param {Array<Face>} faces - Array of faces to sort.
+     * @returns {void}
+     */
     static depthSort(faces){
         for( const face in faces){
             face.getMidpointDistance();
@@ -59,6 +86,12 @@ class Renderer {
         faces.sort((a,b) => b.midpointDistance - a.midpointDistance);
     }
 
+    /**
+     * Draws a triangle on the canvas.
+     * @param {Triangle} triangle - The triangle to draw.
+     * @param {CanvasRenderingContext2D} ctx - The canvas context.
+     * @returns {void}
+     */
     static draw(triangle, ctx){
         ctx.beginPath();
         ctx.strokeStyle = triangle.colour; // Set stroke color
@@ -71,7 +104,11 @@ class Renderer {
         ctx.stroke();            // Draw the outline of the triangle
     }
 
-    // Utility to remove null or undefined triangles from an array
+    /**
+     * Removes null or invalid triangles from an array.
+     * @param {Array<Triangle>} triangles - Array of triangles.
+     * @returns {Array<Triangle>} Filtered array of valid triangles.
+     */
     static cullTriangles(triangles) {
         return triangles.filter(tri =>
             tri &&
