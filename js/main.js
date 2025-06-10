@@ -12,7 +12,7 @@ function main() {
     let controls = new Controls();
 
     // Camera setup
-    let camera = new Camera(0, 0, 0);
+    let camera = new Camera(0, 0, 400);
 
 
     let p1 = new Point3D(0,0, -400);
@@ -27,6 +27,14 @@ function main() {
 
     let tri2 = new Triangle(pn1, pn2, pn3, 'blue');
     scene.meshs.push(new Mesh([tri,tri2]));
+
+    async function init() {
+        await Modeller.readObjectFile();
+        Modeller.mesh.scale(new Point3D(500,500,500));
+        scene.meshs.push(Modeller.mesh);
+        console.log(Modeller.mesh);
+    }
+    init();
 
 
     //let physicsbox = new PhysicsBox(p1, 200);
@@ -84,9 +92,9 @@ function loadCanvas() {
 }
 
 /**
- * Resizes the canvas and sets up the context transform.
- * @param {HTMLCanvasElement} canvas 
- * @param {CanvasRenderingContext2D} ctx 
+ * Resizes the canvas and centers the drawing context.
+ * @param {HTMLCanvasElement} canvas - The canvas to resize.
+ * @param {CanvasRenderingContext2D} ctx - The drawing context.
  * @returns {void}
  */
 function resizeCanvas(canvas, ctx) {
@@ -102,17 +110,13 @@ function resizeCanvas(canvas, ctx) {
     }
 }
 
-
-
-// Assuming Point3D, Triangle, Face classes exist as in your cube code
-
 /**
  * Generates faces for a sphere mesh.
- * @param {number} radius 
- * @param {number} latSegments 
- * @param {number} lonSegments 
- * @param {Array<string>} colours 
- * @returns {Array<Face>}
+ * @param {number} radius - Sphere radius.
+ * @param {number} latSegments - Number of latitude segments.
+ * @param {number} lonSegments - Number of longitude segments.
+ * @param {Array<string>} [colours=['red','green','blue']] - Colour cycle for faces.
+ * @returns {Array<Face>} Array of Face instances making up the sphere.
  */
 function generateSphereFaces(radius, latSegments, lonSegments, colours = ['red', 'green', 'blue']) {
     const vertices = [];

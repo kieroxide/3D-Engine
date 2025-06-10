@@ -5,7 +5,9 @@
 class Renderer {
     constructor(){ }
 
-
+    static orderMeshs(meshs){
+        meshs.sort((a,b) => a.position - b.position);
+    }
     static orderTriangles(triangles) {
         for(const triangle of triangles){
             triangle.sortZ = triangle.computeSortZ();
@@ -88,16 +90,17 @@ class Renderer {
      * @param {CanvasRenderingContext2D} ctx - The canvas context.
      * @returns {void}
      */
-    static draw(triangle, ctx){
-        ctx.beginPath();
-        ctx.strokeStyle = triangle.colour; // Set stroke color
-        ctx.moveTo(triangle.p1.x, triangle.p1.y);
-        ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
-        ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)
-        ctx.closePath();       // Closes the path back to the first vertex
-        ctx.fillStyle = triangle.colour; 
-        ctx.fill();              // Fill the triangle
-        ctx.stroke();            // Draw the outline of the triangle
+    static draw(triangle, ctx, outline = false){
+        if(triangle.exists() && triangle){
+            ctx.beginPath();
+            ctx.strokeStyle = 'black'; // Set stroke color
+            ctx.moveTo(triangle.p1.x, triangle.p1.y);
+            ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
+            ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)
+            ctx.closePath();       // Closes the path back to the first vertex
+            ctx.fillStyle = triangle.colour; 
+            ctx.fill();              // Fill the triangle
+            ctx.stroke();            // Draw the outline of the triangle
+        }
     }
-
 }
