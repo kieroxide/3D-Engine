@@ -5,6 +5,14 @@
 class Renderer {
     constructor(){ }
 
+
+    static orderTriangles(triangles) {
+        for(const triangle of triangles){
+            triangle.sortZ = triangle.computeSortZ();
+        }
+        triangles.sort((a,b) => a.sortZ - b.sortZ);
+        return triangles;
+    }
     /**
      * Converts a 3D point to camera space.
      * @param {Point3D} point - The 3D point.
@@ -75,18 +83,6 @@ class Renderer {
     }
 
     /**
-     * Sorts faces by depth.
-     * @param {Array<Face>} faces - Array of faces to sort.
-     * @returns {void}
-     */
-    static depthSort(faces){
-        for( const face in faces){
-            face.getMidpointDistance();
-        }
-        faces.sort((a,b) => b.midpointDistance - a.midpointDistance);
-    }
-
-    /**
      * Draws a triangle on the canvas.
      * @param {Triangle} triangle - The triangle to draw.
      * @param {CanvasRenderingContext2D} ctx - The canvas context.
@@ -104,18 +100,4 @@ class Renderer {
         ctx.stroke();            // Draw the outline of the triangle
     }
 
-    /**
-     * Removes null or invalid triangles from an array.
-     * @param {Array<Triangle>} triangles - Array of triangles.
-     * @returns {Array<Triangle>} Filtered array of valid triangles.
-     */
-    static cullTriangles(triangles) {
-        return triangles.filter(tri =>
-            tri &&
-            tri.p1 && tri.p2 && tri.p3 &&
-            tri.p1.x !== undefined && tri.p1.y !== undefined && tri.p1.z !== undefined &&
-            tri.p2.x !== undefined && tri.p2.y !== undefined && tri.p2.z !== undefined &&
-            tri.p3.x !== undefined && tri.p3.y !== undefined && tri.p3.z !== undefined
-        );
-    }
 }

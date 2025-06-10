@@ -16,20 +16,33 @@ function main() {
 
 
     let p1 = new Point3D(0,0, -400);
-    let physicsbox = new PhysicsBox(p1, 200);
+    let p2 = new Point3D(100,100,-400);
+    let p3 = new Point3D(100,250,-400);
 
-    let spinningCubes = []
-    spinningCubes.push(new Cube(new Point3D(300, 300, -1000), 100, 0));
-    spinningCubes.push(new Cube(new Point3D(-300, 300, -1000), 100, 0));
+    let tri = new Triangle(p1, p2, p3);
 
-    for(let i = 0; i < 50; i++) {
-        physicsbox.addCube();
-    }
+    let pn1 = new Point3D(0,0, -500);
+    let pn2 = new Point3D(100,100,-300);
+    let pn3 = new Point3D(100,250,-500);
 
-    physicsbox.addToScene(scene);
-    for(const cube of spinningCubes){
-        scene.meshs.push(cube.mesh);
-    }
+    let tri2 = new Triangle(pn1, pn2, pn3, 'blue');
+    scene.meshs.push(new Mesh([tri,tri2]));
+
+
+    //let physicsbox = new PhysicsBox(p1, 200);
+
+    //let spinningCubes = []
+    //spinningCubes.push(new Cube(new Point3D(300, 300, -1000), 100, 0));
+    //spinningCubes.push(new Cube(new Point3D(-300, 300, -1000), 100, 0));
+
+    //for(let i = 0; i < 50; i++) {
+    //    physicsbox.addCube();
+    //}
+
+    //physicsbox.addToScene(scene);
+    //for(const cube of spinningCubes){
+    //    scene.meshs.push(cube.mesh);
+    //}
     window.addEventListener('resize', () => {
         resizeCanvas(canvas, ctx);
     });
@@ -40,7 +53,7 @@ function main() {
      */
     function draw() {
         controls.CheckControls(camera, canvas);
-        physicsbox.update();
+        //physicsbox.update();
 
         ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
         scene.draw(ctx, camera);
@@ -141,5 +154,9 @@ function generateSphereFaces(radius, latSegments, lonSegments, colours = ['red',
 
     return faces;
 }
+
+
+
+
 
 main();
