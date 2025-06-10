@@ -10,12 +10,13 @@ class Triangle {
    * @param {Object} p3 - The third vertex of the triangle.
    * @param {string} [colour="red"] - The colour of the triangle.
    */
-  constructor(p1, p2, p3, colour = "red") {
+  constructor(p1, p2, p3, colour = "red", outline = false) {
     this.p1 = p1; // Vertex
     this.p2 = p2;
     this.p3 = p3;
     this.colour = colour; 
     this.sortZ = 0;      // Used for painter's sort
+    this.outline = outline;
   }
   scale(factor, position){
         this.p1.scale(factor, position);

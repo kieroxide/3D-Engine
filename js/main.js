@@ -9,10 +9,10 @@ function main() {
 
     // Core engine components
     let scene = new Scene();
-    let controls = new Controls();
-
+    
     // Camera setup
     let camera = new Camera(0, 0, 400);
+    let controls = new Controls(camera, scene);
 
 
     let p1 = new Point3D(0,0, -400);

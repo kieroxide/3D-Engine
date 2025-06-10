@@ -4,9 +4,22 @@
  */
 class Renderer {
     constructor(){ }
-
-    static orderMeshs(meshs){
-        meshs.sort((a,b) => a.position - b.position);
+    /**
+   * Casts a forward‐looking ray from the camera (the centre of the screen).
+   * @param {Camera} camera
+   * @returns {{origin: Point3D, direction: Point3D}}
+   */
+    static castForwardRay(camera) {
+        // start with camera‐space forward
+        let dir = new Point3D(0, 0, -1);
+        // apply camera rotations: pitch then yaw
+        dir = Math3D.rotatePitch(dir, camera.pitch);
+        dir = Math3D.rotateYaw(dir, camera.yaw);
+        dir = Math3D.normalize(dir);
+        return {
+            origin: new Point3D(camera.camPos.x, camera.camPos.y, camera.camPos.z),
+            direction: dir
+        };
     }
     static orderTriangles(triangles) {
         for(const triangle of triangles){
@@ -63,6 +76,7 @@ class Renderer {
         Ctriangle.p1 = Renderer.toCameraSpace(triangle.p1, camera);
         Ctriangle.p2 = Renderer.toCameraSpace(triangle.p2, camera);
         Ctriangle.p3 = Renderer.toCameraSpace(triangle.p3, camera);
+        Ctriangle.outline = triangle.outline;
         Ctriangle.colour = triangle.colour;
 
         return Ctriangle;
@@ -79,6 +93,7 @@ class Renderer {
         canvasTriangle.p2 = Renderer.toCanvasCoordinates(camViewTriangle.p2);
         canvasTriangle.p3 = Renderer.toCanvasCoordinates(camViewTriangle.p3);
         canvasTriangle.colour = camViewTriangle.colour;
+        canvasTriangle.outline = camViewTriangle.outline;
         if(camViewTriangle.p1 && camViewTriangle.p2 && camViewTriangle.p3){
             return canvasTriangle;
         }
@@ -90,10 +105,12 @@ class Renderer {
      * @param {CanvasRenderingContext2D} ctx - The canvas context.
      * @returns {void}
      */
-    static draw(triangle, ctx, outline = false){
-        if(triangle.exists() && triangle){
+    static draw(triangle, ctx){
+        if(triangle && triangle.exists()){
             ctx.beginPath();
-            ctx.strokeStyle = 'black'; // Set stroke color
+            if(triangle.outline){
+                ctx.strokeStyle = 'black'; // Set stroke color
+            } else {ctx.strokeStyle = triangle.colour;}
             ctx.moveTo(triangle.p1.x, triangle.p1.y);
             ctx.lineTo(triangle.p2.x, triangle.p2.y);  // Second vertex (x2, y2)
             ctx.lineTo(triangle.p3.x, triangle.p3.y);   // Third vertex (x3, y3)

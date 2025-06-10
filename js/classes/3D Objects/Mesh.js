@@ -15,8 +15,13 @@ class Mesh {
         this.meshScale = new Point3D(1, 1, 1);
         this.uniquePoints = this.getUniquePoints();
         this.outline = outline;
+        this.updateOutlines();
     }
-
+    updateOutlines(){
+        for(const tri of this.triangles){
+            tri.outline = this.outline;
+        }
+    }
     scale(factor) {
         this.uniquePoints = this.getUniquePoints();
         for(const point of this.uniquePoints){

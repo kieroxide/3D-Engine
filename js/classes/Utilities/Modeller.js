@@ -66,8 +66,7 @@ class Modeller {
             const triangle = new Triangle(vertices[indices[0] - 1],vertices[indices[1] - 1],vertices[indices[2] - 1]);
             triangles.push(triangle);
         }
-        const mesh = new Mesh(triangles);
-        console.log(mesh);
+        const mesh = new Mesh(triangles, true);
         return mesh;
     }
 }

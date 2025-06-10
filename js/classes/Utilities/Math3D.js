@@ -113,4 +113,41 @@ class Math3D {
         midpoint = Math3D.scalePoint(midpoint, (1/points.length));
         return midpoint;
     }
+
+    /**
+     * Subtracts vector b from a.
+     * @param {Point3D} a 
+     * @param {Point3D} b 
+     * @returns {Point3D}
+     */
+    static sub(a, b) {
+        return new Point3D(a.x - b.x, a.y - b.y, a.z - b.z);
+    }
+
+    /**
+     * Möller–Trumbore ray/triangle intersection test.
+     * @param {Point3D} orig – Ray origin
+     * @param {Point3D} dir  – Ray direction (normalized)
+     * @param {Point3D} v0   – Triangle vertex 1
+     * @param {Point3D} v1   – Triangle vertex 2
+     * @param {Point3D} v2   – Triangle vertex 3
+     * @returns {number|null} Distance t along the ray, or null if no hit
+     */
+    static intersectRayTriangle(orig, dir, v0, v1, v2) {
+        const EPS = 1e-6;
+        const edge1 = Math3D.sub(v1, v0);
+        const edge2 = Math3D.sub(v2, v0);
+        const pvec  = Math3D.crossProduct(dir, edge2);
+        const det   = Math3D.dotProduct(edge1, pvec);
+        if (Math.abs(det) < EPS) return null;
+        const invDet = 1 / det;
+        const tvec   = Math3D.sub(orig, v0);
+        const u      = invDet * Math3D.dotProduct(tvec, pvec);
+        if (u < 0 || u > 1) return null;
+        const qvec = Math3D.crossProduct(tvec, edge1);
+        const v    = invDet * Math3D.dotProduct(dir, qvec);
+        if (v < 0 || u + v > 1) return null;
+        const t = invDet * Math3D.dotProduct(edge2, qvec);
+        return t > EPS ? t : null;
+    }
 }
