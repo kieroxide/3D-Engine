@@ -4,23 +4,7 @@
  */
 class Renderer {
     constructor(){ }
-    /**
-   * Casts a forward‐looking ray from the camera (the centre of the screen).
-   * @param {Camera} camera
-   * @returns {{origin: Point3D, direction: Point3D}}
-   */
-    static castForwardRay(camera) {
-        // start with camera‐space forward
-        let dir = new Point3D(0, 0, -1);
-        // apply camera rotations: pitch then yaw
-        dir = Math3D.rotatePitch(dir, camera.pitch);
-        dir = Math3D.rotateYaw(dir, camera.yaw);
-        dir = Math3D.normalize(dir);
-        return {
-            origin: new Point3D(camera.camPos.x, camera.camPos.y, camera.camPos.z),
-            direction: dir
-        };
-    }
+    
     static orderTriangles(triangles) {
         for(const triangle of triangles){
             triangle.sortZ = triangle.computeSortZ();

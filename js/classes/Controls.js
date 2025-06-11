@@ -38,39 +38,11 @@ class Controls {
                 this.deltaY += e.movementY;
             }
         });
-
-        window.addEventListener('mousedown', e => {
-            if (e.button !== 0) return;    // only left button
-
-            // cast a forward ray
-            const { origin, direction } = Renderer.castForwardRay(camera);
-
-            let closest = Infinity;
-            let hitMesh  = null;
-            let hitTri   = null;
-
-            // test every triangle on every mesh
-            for (const mesh of scene.meshs) {
-                for (const tri of mesh.triangles) {
-                    const t = Math3D.intersectRayTriangle(
-                        origin, direction,
-                        tri.p1, tri.p2, tri.p3
-                    );
-                    if (t !== null && t < closest) {
-                        closest = t;
-                        hitMesh = mesh;
-                        hitTri  = tri;
-                    }
-                }
-            }
-
-            if (hitMesh) {
-                console.log('Hit mesh:', hitMesh, 'via tri:', hitTri, 'dist:', closest);
-                // e.g. toggle an outline flag on the entire mesh
-                hitMesh.outline = !hitMesh.outline;
-                hitMesh.updateOutlines();
-            }
+        document.addEventListener("click", (e) => {
+            camera.selectMesh(scene);
         });
+
+
     }
 
     /**
