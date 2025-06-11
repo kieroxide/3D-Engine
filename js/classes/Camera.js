@@ -37,7 +37,7 @@ class Camera {
         this.camDirection.x = cosPitch * sinYaw;
         this.camDirection.y = sinPitch;
         this.camDirection.z = -cosPitch * cosYaw;
-        
+
         this.camDirection = Math3D.normalize(this.camDirection);
         // Right Vector
         let crossProduct = Math3D.crossProduct(this.camDirection, this.worldUp);
@@ -102,35 +102,5 @@ class Camera {
         this.camPos.x += this.camDirection.x * dz * this.camSpeed;
         this.camPos.y += this.camDirection.y * dz * this.camSpeed;
         this.camPos.z += this.camDirection.z * dz * this.camSpeed;
-    }
-
-    selectMesh(scene){
-        let selectedMesh = null;
-        let closestT = Infinity;
-
-        const rayOrigin = this.camPos;
-        const rayDirection = this.camDirection;
-        
-        for(const mesh of scene.meshs){
-            for(const tri of mesh.triangles){
-                const t = Math3D.intersectRayTriangle(
-                    rayOrigin,
-                    rayDirection,
-                    tri.p1, tri.p2, tri.p3
-                );
-                if(t !== null && t < closestT){
-                    closestT = t;
-                    selectedMesh = mesh;
-                }
-            }
-        }
-
-        if (selectedMesh) {
-            console.log("hit");
-            console.log("Camera pos:", this.camPos);
-            console.log("Ray dir:", rayDirection);
-
-            selectedMesh.outline = !selectedMesh.outline;
-        }
     }
 }

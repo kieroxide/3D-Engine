@@ -38,9 +38,6 @@ class Controls {
                 this.deltaY += e.movementY;
             }
         });
-        document.addEventListener("click", (e) => {
-            camera.selectMesh(scene);
-        });
 
 
     }
