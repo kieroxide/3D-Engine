@@ -65,27 +65,55 @@ function loadCanvas() {
         console.error('Failed to get canvas context');
         return;
     }
-    resizeCanvas(canvas, ctx); 
-    ctx.foc
+    resizeCanvas(canvas, ctx);
     return {canvas, ctx};
 }
 
 /**
- * Resizes the canvas and sets up the context transform.
+ * Resizes the canvas and sets up the context transform for responsive display.
  * @param {HTMLCanvasElement} canvas 
  * @param {CanvasRenderingContext2D} ctx 
  * @returns {void}
  */
 function resizeCanvas(canvas, ctx) {
-    let size = Math.min(window.innerHeight, window.innerWidth);
-    const margin = 60;
-    size -= margin;
+    // Get the device pixel ratio for high DPI displays
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    
+    // Calculate responsive size based on viewport
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Determine canvas size with responsive margins
+    let margin;
+    if (viewportWidth <= 480) {
+        margin = 10; // Small margin for mobile
+    } else if (viewportWidth <= 768) {
+        margin = 20; // Medium margin for tablets
+    } else {
+        margin = 60; // Large margin for desktop
+    }
+    
+    // Calculate the optimal size maintaining aspect ratio
+    const maxSize = Math.min(viewportWidth, viewportHeight) - margin;
+    const size = Math.max(300, maxSize); // Minimum size of 300px
+    
+    // Set logical canvas size
     canvas.width = size;
     canvas.height = size;
-
+    
+    // Set actual canvas size for high DPI displays
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    
+    // Scale the canvas for high DPI displays
     if (ctx) {
         ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+        ctx.scale(devicePixelRatio, devicePixelRatio);
         ctx.translate(canvas.width / 2, canvas.height / 2);
+        
+        // Improve rendering quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
     }
 }
 

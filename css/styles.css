@@ -1,0 +1,140 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+    cursor: none; /* Hide cursor for immersive experience */
+}
+
+/* Canvas container for perfect centering */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-attachment: fixed;
+}
+
+/* Responsive canvas styling */
+#canvas {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.3),
+        0 0 40px rgba(0, 255, 255, 0.1),
+        inset 0 0 20px rgba(255, 255, 255, 0.05);
+    background: radial-gradient(circle at center, #000814 0%, #001d3d 100%);
+    cursor: crosshair;
+    transition: all 0.3s ease;
+    
+    /* Responsive sizing */
+    max-width: 100vw;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+}
+
+/* Canvas hover effects */
+#canvas:hover {
+    box-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.5),
+        0 0 60px rgba(0, 255, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    #canvas {
+        border-width: 1px;
+        border-radius: 4px;
+        max-width: calc(100vw - 20px);
+        max-height: calc(100vh - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    #canvas {
+        max-width: calc(100vw - 10px);
+        max-height: calc(100vh - 10px);
+        box-shadow: 
+            0 0 10px rgba(0, 255, 255, 0.3),
+            inset 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* Tablet landscape orientation */
+@media (max-width: 1024px) and (orientation: landscape) {
+    #canvas {
+        max-height: calc(100vh - 40px);
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #canvas {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Loading indicator (optional) */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Instructions overlay (optional) */
+.instructions {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.instructions:hover {
+    opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+    .instructions {
+        font-size: 10px;
+        padding: 8px;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+/* Performance optimization for animations */
+#canvas {
+    will-change: transform;
+    transform: translateZ(0);
+}

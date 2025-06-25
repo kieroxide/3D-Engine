@@ -106,7 +106,7 @@ class Math3D {
      * @returns {Point3D}
      */
     static findMidpoint(points){
-        let midpoint = new point3D(0,0,0);
+        let midpoint = new Point3D(0,0,0);
         for( const point of points){
             midpoint = Math3D.addPoints(point, midpoint);
         }
