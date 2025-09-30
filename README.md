@@ -61,5 +61,22 @@ This project demonstrates:
 - More complex 3D shapes
 - Performance optimizations
 - Matrix Math
+
+
+## 📚 What I Learned
+- Implementing 3D geometry from scratch, including cube mesh generation and face construction
+- Writing custom 3D-to-2D projection and camera transformation logic
+- Managing object-oriented JavaScript for 3D engines (classes for Mesh, Face, Triangle, Cube, PhysicsBox, etc.)
+- Handling real-time animation, physics, and collision detection in JavaScript
+- Building a rendering pipeline: transforming, projecting, sorting, and drawing 3D objects on a 2D canvas
+- Responsive canvas resizing and high-DPI support
+
+## 🧩 Challenges Faced
+- Debugging visual artifacts (e.g., “weird corners” on cubes) due to projection math, vertex order, or face sorting
+- Ensuring correct face winding and triangle construction for proper rendering
+- Implementing robust collision detection and response for multiple moving cubes
+- Maintaining performance with many objects and real-time updates
+- Designing extensible code for adding new shapes and features
+
 ---
-*Built by a Computer Science student as a learning project in 3D graphics programming*  
+*Built by a Computer Science student as a learning project in 3D graphics programming*
