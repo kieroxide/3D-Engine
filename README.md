@@ -1,4 +1,4 @@
-# 3D Space Explorer 🚀
+# 3D Space Explorer 
 
 An interactive 3D space visualization engine built from scratch using vanilla JavaScript and HTML5 Canvas. This project demonstrates 3D graphics programming fundamentals, including coordinate transformations, camera controls, and real-time rendering.
 
