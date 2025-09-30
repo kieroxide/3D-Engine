@@ -5,12 +5,12 @@
 class Camera {
     /**
      * Creates a Camera instance.
-     * @param {number} x 
-     * @param {number} y 
-     * @param {number} z 
-     * @param {number} cameraSpeed 
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z
+     * @param {number} cameraSpeed
      */
-    constructor(x, y, z, cameraSpeed = 1){
+    constructor(x, y, z, cameraSpeed = 1) {
         this.worldUp = new Point3D(0, 1, 0);
         this.camPos = new Point3D(x, y, z);
         this.camSpeed = cameraSpeed;
@@ -52,7 +52,7 @@ class Camera {
 
     /**
      * Rotates the camera around the yaw axis.
-     * @param {number} angle 
+     * @param {number} angle
      * @returns {void}
      */
     rotateYaw(angle) {
@@ -62,17 +62,22 @@ class Camera {
 
     /**
      * Rotates the camera around the pitch axis.
-     * @param {number} angle 
+     * @param {number} angle
      * @returns {void}
      */
     rotatePitch(angle) {
+        // Clamp pitch to avoid gimbal lock (e.g., between -89 and +89 degrees)
+        const maxPitch = Math.PI / 2 - 0.01; // ~89 degrees
+        const minPitch = -Math.PI / 2 + 0.01;
         this.pitch += angle;
+        if (this.pitch > maxPitch) this.pitch = maxPitch;
+        if (this.pitch < minPitch) this.pitch = minPitch;
         this.updateCameraVectors();
     }
 
     /**
      * Moves the camera right/left.
-     * @param {number} dx 
+     * @param {number} dx
      * @returns {void}
      */
     translateX(dx) {
@@ -83,7 +88,7 @@ class Camera {
 
     /**
      * Moves the camera up/down.
-     * @param {number} dy 
+     * @param {number} dy
      * @returns {void}
      */
     translateY(dy) {
@@ -94,7 +99,7 @@ class Camera {
 
     /**
      * Moves the camera forward/backward.
-     * @param {number} dz 
+     * @param {number} dz
      * @returns {void}
      */
     translateZ(dz) {
