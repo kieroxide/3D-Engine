@@ -3,6 +3,8 @@
 An interactive 3D space visualization engine built from scratch using vanilla JavaScript and HTML5 Canvas. This project demonstrates 3D graphics programming fundamentals, including coordinate transformations, camera controls, and real-time rendering.
 
 ## 🎯 Overview
+This project was one of my first ambitious programming efforts. Looking back, there are many things I would improve, such as adding matrix math, exploring WebAssembly for performance, and implementing an AST for more advanced depth sorting. Despite its limitations, this project was a great starting point and marked the beginning of my serious journey into programming and computer graphics.
+
 This 3D engine allows you to explore and visualize 3D objects in a virtual space with smooth FPS-style controls. Built as a learning project to understand the mathematical foundations of 3D graphics programming.
 
 ## ✨ Features
