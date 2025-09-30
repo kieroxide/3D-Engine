@@ -22,7 +22,7 @@ function main() {
     spinningCubes.push(new Cube(new Point3D(300, 300, -1000), 100, 0));
     spinningCubes.push(new Cube(new Point3D(-300, 300, -1000), 100, 0));
 
-    for(let i = 0; i < 50; i++) {
+    for(let i = 0; i < 20; i++) {
         physicsbox.addCube();
     }
 
